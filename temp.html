@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMST Lifelong Learning | FAQ</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Subtle grid pattern */
+    .grid-pattern {
+      background-image:
+        linear-gradient(to right, rgba(148,163,184,0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148,163,184,0.08) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    /* Glassmorphism base */
+    .glass {
+      background: rgba(15, 23, 42, 0.55);            /* slate-900 w/ alpha */
+      border: 1px solid rgba(148, 163, 184, 0.18);   /* slate-400 w/ alpha */
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* Animated gradient border ring */
+    .glass-ring::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 1rem; /* matches rounded-2xl */
+      padding: 1px;
+      background: linear-gradient(120deg,
+        rgba(59,130,246,0.45),
+        rgba(34,211,238,0.35),
+        rgba(168,85,247,0.35)
+      );
+      mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      opacity: 0;
+      transition: opacity .35s ease;
+      pointer-events: none;
+    }
+    .glass-ring:hover::before { opacity: 1; }
+
+    /* Fancy glow pulse on hover */
+    .glow-hover:hover {
+      box-shadow: 0 25px 60px rgba(59,130,246,0.15), 0 0 0 1px rgba(34,211,238,0.08) inset;
+      transform: translateY(-4px);
+    }
+
+    /* Smooth accordion */
+    .answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 450ms ease, opacity 350ms ease, transform 350ms ease;
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    .faq-open .answer {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 520px; /* enough for longer answers */
+    }
+
+    /* Plus -> minus animation */
+    .icon-line {
+      transition: transform 250ms ease, opacity 250ms ease;
+      transform-origin: center;
+    }
+    .faq-open .icon-vert {
+      transform: rotate(90deg);
+      opacity: 0;
+    }
+
+    /* Stagger entry (JS will remove these) */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+    .reveal-item.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section reveal */
+    .section-hidden {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 1000ms ease, transform 1000ms ease;
+    }
+    .section-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-100">
+
+  <!-- Optional simple top bar -->
+  <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur-lg border-b border-slate-800/70">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500/25 to-cyan-400/20 border border-slate-700/60"></div>
+        <div class="leading-tight">
+          <div class="font-semibold">AIMST Lifelong Learning</div>
+          <div class="text-xs text-slate-400">ODL FAQ</div>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="index.html#home" class="text-slate-300 hover:text-cyan-300 transition-colors">Home</a>
+        <a href="index.html#programs" class="text-slate-300 hover:text-cyan-300 transition-colors">Programs</a>
+        <a href="student_resource.html" class="text-slate-300 hover:text-cyan-300 transition-colors">Student Resources</a>
+        <a href="index.html#contact" class="text-slate-300 hover:text-cyan-300 transition-colors">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- FAQ Accordion Section -->
+  <section id="faq-section" class="py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative section-hidden">
+    <div class="absolute inset-0 grid-pattern opacity-20"></div>
+
+    <!-- Ambient glows -->
+    <div class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[780px] h-[780px] bg-blue-500/10 blur-3xl rounded-full"></div>
+    <div class="pointer-events-none absolute -bottom-40 right-10 w-[520px] h-[520px] bg-fuchsia-500/10 blur-3xl rounded-full"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <!-- Header -->
+      <div class="text-center mb-10">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+          <span class="bg-gradient-to-r from-fuchsia-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent">
+            Frequently Asked Questions
+          </span>
+        </h1>
+        <p class="mt-3 text-slate-300">
+          Find quick answers about AIMST Lifelong Learning Open & Distance Learning (ODL).
+        </p>
+      </div>
+
+      <!-- Search -->
+      <div class="relative mb-8">
+        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-400">
+          <!-- search icon -->
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-4.35-4.35m1.6-5.05a7.45 7.45 0 11-14.9 0 7.45 7.45 0 0114.9 0z" />
+          </svg>
+        </div>
+
+        <input
+          id="faq-search"
+          type="text"
+          placeholder="Search questions…"
+          class="w-full pl-12 pr-4 py-4 rounded-2xl glass text-slate-100 placeholder:text-slate-400 outline-none
+                 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-400/30 transition"
+        />
+        <div class="mt-3 text-xs text-slate-400">
+          Tip: try “fees”, “portal”, “international”, “assessments”, “graduation”.
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="faq-empty" class="hidden text-center py-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-slate-700/50">
+          <span class="text-slate-200 font-medium">No results</span>
+          <span class="text-slate-400">— try a different keyword.</span>
+        </div>
+      </div>
+
+      <!-- FAQ Items -->
+      <div id="faq-container" class="space-y-4"></div>
+
+      <!-- CTA -->
+      <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="index.html#home"
+           class="px-6 py-3 rounded-xl bg-slate-900/60 border border-slate-700/60 hover:border-cyan-400/30 hover:text-cyan-200 transition">
+          Back to Home
+        </a>
+        <a href="index.html#contact"
+           class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500/30 to-cyan-400/20 border border-slate-700/60 hover:border-cyan-400/40 hover:shadow-lg hover:shadow-cyan-400/10 transition">
+          Contact Support
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-10 border-t border-slate-800/70 bg-slate-950">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-sm text-slate-400">© AIMST Lifelong Learning. All rights reserved.</div>
+      <div class="flex items-center gap-5 text-sm">
+        <a href="index.html#home" class="text-slate-400 hover:text-cyan-300 transition-colors">Home</a>
+        <a href="student_resource.html" class="text-slate-400 hover:text-cyan-300 transition-colors">Student Resources</a>
+        <a href="index.html#contact" class="text-slate-400 hover:text-cyan-300 transition-colors">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // -----------------------
+    // FAQ data
+    // -----------------------
+    const FAQS = [
+      {
+        q: "What is the AIMST Lifelong Learning at AIMST University?",
+        a: "The AIMST Lifelong Learning at AIMST University provides Open and Distance Learning programs to students who are unable to attend traditional classes. It offers flexible learning options and various support services."
+      },
+      {
+        q: "How do I apply for an ODL program?",
+        a: "To apply for an ODL program, visit the AIMST University website and complete the online application form or contact the AIMST Lifelong Learning for guidance on the application process."
+      },
+      {
+        q: "What programs are offered through ODL?",
+        a: "The AIMST Lifelong Learning offers a range of undergraduate and postgraduate programs. For a full list of programs, please refer to the ODL section on the AIMST University website."
+      },
+      {
+        q: "Are there any prerequisites for ODL programs?",
+        a: "Prerequisites vary by program. Check the specific program details on our website or contact the AIMST Lifelong Learning for information on entry requirements."
+      },
+      {
+        q: "What are the tuition fees for ODL programs?",
+        a: "Tuition fees vary depending on the program. Please refer to the fee structure available on our website or contact the AIMST Lifelong Learning for detailed fee information."
+      },
+      {
+        q: "Can I pay my fees in installments?",
+        a: "Yes, installment payment options are available. Please contact the AIMST Lifelong Learning to discuss payment plans and arrangements."
+      },
+      {
+        q: "How do I access course materials?",
+        a: "Course materials can be accessed through the university's online learning portal. You will receive login credentials and instructions upon enrollment."
+      },
+      {
+        q: "Is there a support system for ODL students?",
+        a: "Yes, ODL students have access to academic support, counseling services, and technical assistance through the AIMST Lifelong Learning. Contact us for more details on available support services."
+      },
+      {
+        q: "How do I contact my course instructor?",
+        a: "Course instructors can be contacted through the online learning portal or via email. Contact details are provided in the course syllabus or on the portal."
+      },
+      {
+        q: "What is the format of ODL assessments?",
+        a: "Assessments may include online quizzes, assignments, and examinations. Details about the assessment format and schedule will be provided in your course materials."
+      },
+      {
+        q: "How do I submit assignments?",
+        a: "Assignments are typically submitted through the online learning portal. Instructions for submission will be provided in your course materials."
+      },
+      {
+        q: "What technology do I need for ODL?",
+        a: "You will need a computer or tablet with internet access. Some courses may also require specific software or applications, which will be detailed in the course requirements."
+      },
+      {
+        q: "Can international students enroll in ODL programs?",
+        a: "Yes, international students are welcome to enroll in our ODL programs. Please check the specific admission requirements for international students on our website."
+      },
+      {
+        q: "How do I check my grades?",
+        a: "Grades can be checked through the online learning portal. Login with your credentials to access your academic records."
+      },
+      {
+        q: "What is the duration of ODL programs?",
+        a: "The duration varies depending on the program and your pace of study. Refer to the program details for specific duration information."
+      },
+      {
+        q: "Are there any face-to-face requirements?",
+        a: "Some programs may have occasional face-to-face sessions or examinations. Details will be provided in your course information."
+      },
+      {
+        q: "Can I transfer credits from another institution?",
+        a: "Credit transfers are possible but subject to approval. Please contact the AIMST Lifelong Learning to discuss the transfer of credits from other institutions."
+      },
+      {
+        q: "What should I do if I forget my portal login credentials?",
+        a: "If you forget your login credentials, use the 'Forgot Password' feature on the portal or contact the AIMST Lifelong Learning for assistance."
+      },
+      {
+        q: "How can I withdraw from a program?",
+        a: "To withdraw from a program, submit a formal request to the AIMST Lifelong Learning. Please review the withdrawal policy for any applicable conditions or fees."
+      },
+      {
+        q: "Are there any scholarships available for ODL students?",
+        a: "Scholarships may be available for eligible ODL students. Check the AIMST University website or contact the AIMST Lifelong Learning for information on available scholarships and application procedures."
+      },
+      {
+        q: "What is the process for graduation?",
+        a: "Upon completion of your program, you will need to apply for graduation through the online portal. The AIMST Lifelong Learning will provide instructions on the graduation process and ceremonies."
+      }
+    ];
+
+    // -----------------------
+    // Render FAQ items
+    // -----------------------
+    const faqContainer = document.getElementById("faq-container");
+    const emptyState = document.getElementById("faq-empty");
+
+    function createFaqItem({ q, a }, index) {
+      const item = document.createElement("div");
+      item.className =
+        "reveal-item glass glass-ring glow-hover relative rounded-2xl overflow-hidden transition-all duration-300";
+
+      // header button
+      item.innerHTML = `
+        <button type="button"
+          class="w-full text-left px-6 sm:px-7 py-5 flex items-start gap-4"
+          aria-expanded="false">
+          <div class="mt-1 w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-400/15 border border-slate-700/40 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-cyan-200/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6v12m6-6H6" class="icon-line icon-vert"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 12h12" class="icon-line"></path>
+            </svg>
+          </div>
+
+          <div class="flex-1">
+            <h3 class="text-base sm:text-lg font-semibold text-slate-50 leading-snug">${q}</h3>
+            <div class="answer mt-3 text-sm sm:text-[15px] text-slate-300 leading-relaxed">
+              ${a}
+            </div>
+          </div>
+        </button>
+      `;
+
+      // toggle open/close
+      const btn = item.querySelector("button");
+      btn.addEventListener("click", () => {
+        const isOpen = item.classList.toggle("faq-open");
+        btn.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      // quick searchable text
+      item.dataset.search = (q + " " + a).toLowerCase();
+
+      return item;
+    }
+
+    function renderFaq(list) {
+      faqContainer.innerHTML = "";
+      list.forEach((faq, idx) => faqContainer.appendChild(createFaqItem(faq, idx)));
+      emptyState.classList.toggle("hidden", list.length !== 0);
+      // after render, run stagger reveal
+      staggerReveal();
+    }
+
+    // initial render
+    renderFaq(FAQS);
+
+    // -----------------------
+    // Search filter
+    // -----------------------
+    const searchInput = document.getElementById("faq-search");
+    searchInput.addEventListener("input", () => {
+      const term = searchInput.value.trim().toLowerCase();
+      const items = Array.from(faqContainer.children);
+
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const match = item.dataset.search.includes(term);
+        item.style.display = match ? "" : "none";
+        if (match) visibleCount++;
+      });
+
+      emptyState.classList.toggle("hidden", visibleCount !== 0);
+    });
+
+    // -----------------------
+    // Section scroll reveal
+    // -----------------------
+    const section = document.getElementById("faq-section");
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            section.classList.add("section-visible");
+            section.classList.remove("section-hidden");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    sectionObserver.observe(section);
+
+    // -----------------------
+    // Stagger reveal items
+    // -----------------------
+    function staggerReveal() {
+      const all = Array.from(document.querySelectorAll(".reveal-item"));
+      // reset visibility for re-render
+      all.forEach((el) => el.classList.remove("is-visible"));
+
+      // reveal only items that are not display:none
+      const visible = all.filter((el) => el.style.display !== "none");
+
+      visible.forEach((el, i) => {
+        setTimeout(() => el.classList.add("is-visible"), i * 90);
+      });
+    }
+  </script>
+</body>
+</html>
