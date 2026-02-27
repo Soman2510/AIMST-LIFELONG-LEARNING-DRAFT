@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Resources - AIMST</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/dist/msal-browser.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
+  <!-- MSAL will be loaded with fallback strategy in inline script below -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -250,6 +250,42 @@
 
   </div>
   <script>
+    // ========= MSAL CDN LOADER WITH FALLBACK =========
+    const msalUrls = [
+      'https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/dist/msal-browser.min.js',
+      'https://unpkg.com/@azure/msal-browser@3/dist/msal-browser.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/msal-browser/3.11.0/msal-browser.min.js'
+    ];
+
+    let msalLoadAttempt = 0;
+
+    function loadMSALScript() {
+      if (msalLoadAttempt >= msalUrls.length) {
+        console.error("Failed to load MSAL from all CDN sources");
+        return;
+      }
+
+      const script = document.createElement('script');
+      const url = msalUrls[msalLoadAttempt];
+      console.log(`Attempting to load MSAL from: ${url}`);
+
+      script.src = url;
+      script.type = 'text/javascript';
+
+      script.onload = () => {
+        console.log("MSAL library loaded successfully from:", url);
+      };
+
+      script.onerror = () => {
+        console.warn(`Failed to load MSAL from ${url}, trying next CDN...`);
+        msalLoadAttempt++;
+        loadMSALScript();
+      };
+
+      document.head.appendChild(script);
+    }
+
+    loadMSALScript();
     const defaultConfig = {
       page_title: 'How Can We Assist You Today?',
       font_family: 'Plus Jakarta Sans',
@@ -294,8 +330,8 @@
       }
     }
 
-    // Initialize MSAL as soon as script loads
-    initMSAL();
+    // Start initialization attempts after a short delay to allow CDN to load
+    setTimeout(initMSAL, 100);
 
     function handleLoginClick() {
       console.log("Login button clicked!");
@@ -318,8 +354,10 @@
         if (!instance) {
           console.error("MSAL still not initialized after 20 seconds");
           console.error("MSAL library status:", typeof msal);
+          console.error("CDN loading attempted from:", msalUrls);
+          
           const errorMsg = typeof msal === "undefined" 
-            ? "MSAL library failed to load from CDN. Please check your internet connection and refresh the page."
+            ? "The authentication library failed to load from the CDN. This could be due to:\n\n• No internet connection\n• Network firewall blocking CDN access\n• Temporary CDN outage\n\nPlease:\n1. Check your internet connection\n2. Try refreshing the page\n3. If the problem persists, contact support at odl@aimst.edu.my"
             : "Authentication service failed to initialize. Please refresh the page and try again.";
           alert(errorMsg);
           return;
