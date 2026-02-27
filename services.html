@@ -252,20 +252,21 @@
       font_size: 16
     };
 
-    // Mobile menu toggle
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+      // Mobile menu toggle (SAFE)
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-    // Close mobile menu when clicking a link
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
-    });
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        }
+
+  
 
     // Element SDK initialization
     if (window.elementSdk) {
@@ -345,7 +346,7 @@
           auth: {
             clientId: CLIENT_ID,
             authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`, // single-tenant
-            redirectUri: window.location.origin + window.location.pathname
+            redirectUri:'https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html' 
           },
           cache: {
             cacheLocation: "sessionStorage",
