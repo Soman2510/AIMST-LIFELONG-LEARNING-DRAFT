@@ -251,273 +251,90 @@
 
   </div>
   <script>
-    // ========= MSAL CDN LOADER WITH FALLBACK =========
-    const msalUrls = [
-      'https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/dist/msal-browser.min.js',
-      'https://unpkg.com/@azure/msal-browser@3/dist/msal-browser.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/msal-browser/3.11.0/msal-browser.min.js'
-    ];
+  const AIMST_TENANT_ID = "88635101-788c-405f-ab59-562c339fae3e";
+  const CLIENT_ID = "8907e140-7425-4afe-a725-b4576becfff0";
+  const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
+  const REDIRECT_URI = "https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html";
 
-    let msalLoadAttempt = 0;
+  let msalInstance;
 
-    function loadMSALScript() {
-      if (msalLoadAttempt >= msalUrls.length) {
-        console.error("Failed to load MSAL from all CDN sources");
-        return;
-      }
+  document.addEventListener("DOMContentLoaded", async () => {
+    // UI refs
+    const statusText = document.getElementById("status-text");
+    const loading = document.getElementById("loading-status");
+    const errorBox = document.getElementById("error-message");
+    const errorText = document.getElementById("error-text");
+    const loginBtn = document.getElementById("login-btn");
 
-      const script = document.createElement('script');
-      const url = msalUrls[msalLoadAttempt];
-      console.log(`Attempting to load MSAL from: ${url}`);
-
-      script.src = url;
-      script.type = 'text/javascript';
-
-      script.onload = () => {
-        console.log("MSAL library loaded successfully from:", url);
-      };
-
-      script.onerror = () => {
-        console.warn(`Failed to load MSAL from ${url}, trying next CDN...`);
-        msalLoadAttempt++;
-        loadMSALScript();
-      };
-
-      document.head.appendChild(script);
-    }
-
-    loadMSALScript();
-    const defaultConfig = {
-      page_title: 'How Can We Assist You Today?',
-      font_family: 'Plus Jakarta Sans',
-      font_size: 16
+    const showLoading = (msg) => {
+      if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
+      if (loading) loading.classList.remove("hidden");
+      if (errorBox) errorBox.classList.add("hidden");
     };
 
-    // Global login function
-    let msalInstance;
-    let statusText, loading, errorBox, errorText;
+    const showError = (msg) => {
+      if (errorText) errorText.textContent = msg || "Only AIMST organization accounts can access this portal.";
+      if (errorBox) errorBox.classList.remove("hidden");
+      if (loading) loading.classList.add("hidden");
+    };
 
-    // ========= MSAL CONFIG (Initialize early) =========
-    const AIMST_TENANT_ID = "88635101-788c-405f-ab59-562c339fae3e";
-    const CLIENT_ID = "8907e140-7425-4afe-a725-b4576becfff0";
-    const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
+    const isAIMSTTenant = (claimsOrAccount) => {
+      const claims = claimsOrAccount?.idTokenClaims || claimsOrAccount;
+      return (claims?.tid || "").toLowerCase() === AIMST_TENANT_ID.toLowerCase();
+    };
 
-    // Wait for MSAL library to load, then initialize
-    function initMSAL() {
-      if (typeof msal === "undefined") {
-        console.warn("MSAL library not loaded yet, retrying...");
-        setTimeout(initMSAL, 500);
+    // ✅ MSAL init (no waiting needed because local file loads first)
+    msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: CLIENT_ID,
+        authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
+        redirectUri: REDIRECT_URI
+      },
+      cache: { cacheLocation: "sessionStorage" }
+    });
+
+    // ✅ Handle redirect return
+    try {
+      const response = await msalInstance.handleRedirectPromise();
+
+      if (response) {
+        if (!isAIMSTTenant(response.idTokenClaims)) {
+          showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
+          return;
+        }
+        window.location.href = SUCCESS_REDIRECT_URL;
         return;
       }
 
-      try {
-        const msalConfig = {
-          auth: {
-            clientId: CLIENT_ID,
-            authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
-            redirectUri: 'https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html'
-          },
-          cache: {
-            cacheLocation: "sessionStorage",
-            storeAuthStateInCookie: false
-          }
-        };
-
-        msalInstance = new msal.PublicClientApplication(msalConfig);
-        console.log("MSAL initialized successfully");
-      } catch (e) {
-        console.error("MSAL initialization error:", e);
-        setTimeout(initMSAL, 1000);
+      // already logged in?
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0 && accounts.some(isAIMSTTenant)) {
+        showLoading("You are signed in. Redirecting...");
+        window.location.href = SUCCESS_REDIRECT_URL;
+        return;
       }
+    } catch (e) {
+      console.error(e);
+      showError("Login failed. Please refresh and try again.");
     }
 
-    // Start initialization attempts after a short delay to allow CDN to load
-    setTimeout(initMSAL, 100);
-
-    function handleLoginClick() {
-      console.log("Login button clicked!");
-      
-      // Function to wait for MSAL to be ready
-      async function waitForMSAL() {
-        let retries = 0;
-        const maxRetries = 50; // Wait up to 20 seconds
-        while (!msalInstance && retries < maxRetries) {
-          if (retries % 20 === 0) {
-            console.log(`Waiting for MSAL... ${retries / 10}s`);
-          }
-          await new Promise(resolve => setTimeout(resolve, 100));
-          retries++;
-        }
-        return msalInstance;
-      }
-
-      waitForMSAL().then((instance) => {
-        if (!instance) {
-          console.error("MSAL still not initialized after 20 seconds");
-          console.error("MSAL library status:", typeof msal);
-          console.error("CDN loading attempted from:", msalUrls);
-          
-          const errorMsg = typeof msal === "undefined" 
-            ? "The authentication library failed to load from the CDN. This could be due to:\n\n• No internet connection\n• Network firewall blocking CDN access\n• Temporary CDN outage\n\nPlease:\n1. Check your internet connection\n2. Try refreshing the page\n3. If the problem persists, contact support at odl@aimst.edu.my"
-            : "Authentication service failed to initialize. Please refresh the page and try again.";
-          alert(errorMsg);
-          return;
-        }
-        
-        const showLoading = (msg) => {
-          if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
-          if (loading) loading.classList.remove("hidden");
-          if (errorBox) errorBox.classList.add("hidden");
-        };
-
+    // ✅ Login button
+    if (loginBtn) {
+      loginBtn.addEventListener("click", async () => {
         try {
-          console.log("Starting Microsoft login redirect...");
           showLoading("Redirecting to Microsoft sign-in...");
-          instance.loginRedirect({
+          await msalInstance.loginRedirect({
             scopes: ["openid", "profile", "email"],
             prompt: "select_account"
           });
         } catch (e) {
-          console.error("Login error:", e);
-          alert("Unable to start login. Please try again.");
+          console.error(e);
+          showError("Unable to start login. Please try again.");
         }
       });
     }
-
-      // Mobile menu toggle (SAFE)
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            });
-
-            mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-            });
-        }
-
-  
-
-    // Element SDK initialization
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange: async (config) => {
-          const pageTitle = document.getElementById('page-title');
-          if (pageTitle) {
-            const titleText = config.page_title || defaultConfig.page_title;
-            const parts = titleText.split('?');
-            if (parts.length > 1) {
-              pageTitle.innerHTML = `<span class="text-white">How Can We</span><span class="gradient-text block mt-2">Assist You Today?</span>`;
-            } else {
-              pageTitle.innerHTML = titleText;
-            }
-          }
-
-          const fontFamily = config.font_family || defaultConfig.font_family;
-          document.body.style.fontFamily = `${fontFamily}, sans-serif`;
-
-          const baseSize = config.font_size || defaultConfig.font_size;
-          document.documentElement.style.fontSize = `${baseSize}px`;
-        },
-        mapToCapabilities: (config) => ({
-          recolorables: [],
-          borderables: [],
-          fontEditable: {
-            get: () => config.font_family || defaultConfig.font_family,
-            set: (value) => {
-              config.font_family = value;
-              window.elementSdk.setConfig({ font_family: value });
-            }
-          },
-          fontSizeable: {
-            get: () => config.font_size || defaultConfig.font_size,
-            set: (value) => {
-              config.font_size = value;
-              window.elementSdk.setConfig({ font_size: value });
-            }
-          }
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ['page_title', config.page_title || defaultConfig.page_title]
-        ])
-      });
-    }
-
-      document.addEventListener("DOMContentLoaded", async () => {
-        // Wait for MSAL to be initialized
-        let retries = 0;
-        while (!msalInstance && retries < 20) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          retries++;
-        }
-
-        if (!msalInstance) {
-          console.error("MSAL failed to initialize");
-          return;
-        }
-
-        // ========= UI ELEMENTS =========
-        statusText = document.getElementById("status-text");
-        loading = document.getElementById("loading-status");
-        errorBox = document.getElementById("error-message");
-        errorText = document.getElementById("error-text");
-
-        // showLoading and showError now defined globally above
-        window.showLoading = (msg) => {
-          if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
-          if (loading) loading.classList.remove("hidden");
-          if (errorBox) errorBox.classList.add("hidden");
-        };
-
-        window.showError = (msg) => {
-          if (errorText) errorText.textContent = msg || "Only AIMST organization accounts can access this portal.";
-          if (errorBox) errorBox.classList.remove("hidden");
-          if (loading) loading.classList.add("hidden");
-        };
-
-        function isAIMSTTenant(claimsOrAccount) {
-          const claims = claimsOrAccount?.idTokenClaims || claimsOrAccount;
-          return (claims?.tid || "").toLowerCase() === AIMST_TENANT_ID.toLowerCase();
-        }
-
-        // ========= HANDLE REDIRECT RETURN =========
-        try {
-          const response = await msalInstance.handleRedirectPromise();
-
-          // If we just returned from Microsoft login:
-          if (response) {
-            console.log("User logged in:", response);
-            if (!isAIMSTTenant(response.idTokenClaims)) {
-              window.showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
-              return;
-            }
-            // ✅ success
-            window.location.href = SUCCESS_REDIRECT_URL;
-            return;
-          }
-
-          // If user is already signed in (refresh/open page again):
-          const accounts = msalInstance.getAllAccounts();
-          if (accounts.length > 0) {
-            const ok = accounts.some(acc => isAIMSTTenant(acc));
-            if (ok) {
-              window.showLoading("You are signed in. Redirecting...");
-              window.location.href = SUCCESS_REDIRECT_URL;
-              return;
-            } else {
-              window.showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
-            }
-          }
-        } catch (e) {
-          console.error("Error during redirect handling:", e);
-          // Don't show error on initial page load - only show if there's an actual issue
-        }
-      });
-
-  </script>
+  });
+</script>
  <!-- Footer -->
  <!-- Footer -->
    <footer class="bg-slate-950 border-t border-slate-800">
