@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Resources - AIMST</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="/_sdk/element_sdk.js"></script>
   <script src="assets/msal-browser.min.js"></script>
   <!-- MSAL will be loaded with fallback strategy in inline script below -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -282,6 +281,13 @@
       const claims = claimsOrAccount?.idTokenClaims || claimsOrAccount;
       return (claims?.tid || "").toLowerCase() === AIMST_TENANT_ID.toLowerCase();
     };
+
+    if (typeof msal === "undefined") {
+    console.error("MSAL not loaded. Check assets/msal-browser.min.js path.");
+    // Do NOT show "Access denied" here — just show a friendly message:
+    showError("Authentication library not loaded. Please refresh or contact support.");
+    return;
+    }
 
     // ✅ MSAL init (no waiting needed because local file loads first)
     msalInstance = new msal.PublicClientApplication({
