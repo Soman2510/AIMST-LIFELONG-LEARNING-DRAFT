@@ -380,6 +380,18 @@
     }
 
       document.addEventListener("DOMContentLoaded", async () => {
+        // Wait for MSAL to be initialized
+        let retries = 0;
+        while (!msalInstance && retries < 20) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+
+        if (!msalInstance) {
+          console.error("MSAL failed to initialize");
+          return;
+        }
+
         // ========= UI ELEMENTS =========
         statusText = document.getElementById("status-text");
         loading = document.getElementById("loading-status");
@@ -410,6 +422,7 @@
 
           // If we just returned from Microsoft login:
           if (response) {
+            console.log("User logged in:", response);
             if (!isAIMSTTenant(response.idTokenClaims)) {
               window.showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
               return;
@@ -432,8 +445,8 @@
             }
           }
         } catch (e) {
-          console.error(e);
-          window.showError("Login failed. Please try again.");
+          console.error("Error during redirect handling:", e);
+          // Don't show error on initial page load - only show if there's an actual issue
         }
       });
 
