@@ -273,20 +273,25 @@
         return;
       }
 
-      const msalConfig = {
-        auth: {
-          clientId: CLIENT_ID,
-          authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
-          redirectUri: 'https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html'
-        },
-        cache: {
-          cacheLocation: "sessionStorage",
-          storeAuthStateInCookie: false
-        }
-      };
+      try {
+        const msalConfig = {
+          auth: {
+            clientId: CLIENT_ID,
+            authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
+            redirectUri: 'https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html'
+          },
+          cache: {
+            cacheLocation: "sessionStorage",
+            storeAuthStateInCookie: false
+          }
+        };
 
-      msalInstance = new msal.PublicClientApplication(msalConfig);
-      console.log("MSAL initialized successfully");
+        msalInstance = new msal.PublicClientApplication(msalConfig);
+        console.log("MSAL initialized successfully");
+      } catch (e) {
+        console.error("MSAL initialization error:", e);
+        setTimeout(initMSAL, 1000);
+      }
     }
 
     // Initialize MSAL as soon as script loads
@@ -298,7 +303,7 @@
       // Function to wait for MSAL to be ready
       async function waitForMSAL() {
         let retries = 0;
-        while (!msalInstance && retries < 20) {
+        while (!msalInstance && retries < 100) {  // Wait up to 10 seconds
           await new Promise(resolve => setTimeout(resolve, 100));
           retries++;
         }
@@ -307,7 +312,8 @@
 
       waitForMSAL().then((instance) => {
         if (!instance) {
-          alert("Failed to initialize authentication. Please refresh the page and try again.");
+          console.error("MSAL still not initialized after 10 seconds");
+          alert("Authentication service is taking a long time to load. Please check your internet connection and refresh the page.");
           return;
         }
         
@@ -318,13 +324,14 @@
         };
 
         try {
+          console.log("Starting Microsoft login redirect...");
           showLoading("Redirecting to Microsoft sign-in...");
           instance.loginRedirect({
             scopes: ["openid", "profile", "email"],
             prompt: "select_account"
           });
         } catch (e) {
-          console.error(e);
+          console.error("Login error:", e);
           alert("Unable to start login. Please try again.");
         }
       });
