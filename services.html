@@ -339,7 +339,7 @@
       // Function to wait for MSAL to be ready
       async function waitForMSAL() {
         let retries = 0;
-        const maxRetries = 200; // Wait up to 20 seconds
+        const maxRetries = 50; // Wait up to 20 seconds
         while (!msalInstance && retries < maxRetries) {
           if (retries % 20 === 0) {
             console.log(`Waiting for MSAL... ${retries / 10}s`);
