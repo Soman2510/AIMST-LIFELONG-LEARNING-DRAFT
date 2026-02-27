@@ -29,6 +29,7 @@
     
     .gradient-border::before {
       content: '';
+      pointer-events: none;
       position: absolute;
       inset: 0;
       border-radius: inherit;
@@ -192,7 +193,7 @@
      </div>
    </nav>
    <!-- Helpdesk Hero Section -->
-   <section class="hero-bg grid-pattern relative py-2 flex-1 flex items-center">
+   <section class="hero-bg grid-pattern relative pt-20 sm:pt-24 lg:pt-32 pb-16 flex-1 flex items-center ">
     <div class="absolute inset-0 overflow-hidden">
      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pulse-glow"></div>
      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pulse-glow" style="animation-delay: 1.5s;"></div>
@@ -248,35 +249,175 @@
          </div>
         </div>
        </div>
-      </div><!-- Form Card -->
-      <div class="gradient-border rounded-3xl p-8 md:p-10 bg-slate-800/50 backdrop-blur-xl shadow-2xl">
-       <form id="helpdesk-form" class="space-y-6"><!-- Category Dropdown -->
-        <div><label for="category" class="block text-sm font-semibold text-gray-200 mb-3">Select a Category:</label> <select id="category" name="category" required class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all font-medium appearance-none cursor-pointer" style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%2206b6d4%22 stroke-width=%222%22%3e%3cpath d=%22M6 9l6 6 6-6%22%3e%3c/path%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"> <option value="" disabled selected class="text-gray-500">Please choose an option</option> <option value="academic" class="bg-slate-900 text-white">Academic matters</option> <option value="admission" class="bg-slate-900 text-white">Admission and Registration</option> <option value="exam" class="bg-slate-900 text-white">Exam division</option> <option value="finance" class="bg-slate-900 text-white">Finance division</option> <option value="affairs" class="bg-slate-900 text-white">Student affairs</option> <option value="technical" class="bg-slate-900 text-white">Technical support</option> <option value="others" class="bg-slate-900 text-white">Others</option> </select>
-         <p class="text-xs text-gray-500 mt-2">Choose the most relevant category so we can route your enquiry faster.</p>
-        </div><!-- Name Input -->
-        <div><label for="name" class="block text-sm font-semibold text-gray-200 mb-3">Your Name</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" placeholder="Enter your full name">
-        </div><!-- Email Input -->
-        <div><label for="email" class="block text-sm font-semibold text-gray-200 mb-3">Your Email</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" placeholder="Enter your email address">
-        </div><!-- Message Textarea -->
-        <div><label for="message" class="block text-sm font-semibold text-gray-200 mb-3">Your Message</label> <textarea id="message" name="message" required rows="5" class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all resize-none" placeholder="Describe your issue or query in detail..."></textarea>
-        </div><!-- Submit Button --> <button type="submit" class="w-full glow-btn px-8 py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-3 mt-8">
-         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-         </svg> Contact Us </button>
-       </form><!-- Success Message -->
-       <div id="form-success" class="hidden text-center py-8">
-        <div class="w-16 h-16 rounded-full bg-emerald-500/20 mx-auto mb-4 flex items-center justify-center">
-         <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-         </svg>
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">Request Submitted!</h3>
-        <p class="text-gray-400 mb-4">Thank you for reaching out. We'll respond to your enquiry shortly.</p><button type="button" class="text-cyan-400 hover:text-cyan-300 font-semibold text-sm" onclick="location.reload()">Submit Another Enquiry</button>
-       </div>
       </div>
+      <!-- Helpdesk Form Card -->
+      <div class="gradient-border rounded-3xl p-8 md:p-10 bg-slate-800/50 backdrop-blur-xl shadow-2xl">
+
+        <!-- FORM -->
+        <form id="helpdesk-form" class="space-y-6">
+
+          <!-- CATEGORY -->
+          <div>
+            <label for="category" class="block text-sm font-semibold text-gray-200 mb-3">
+              Select a Category:
+            </label>
+
+            <select
+              id="category"
+              name="category"
+              required
+              class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-slate-300 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all font-medium appearance-none cursor-pointer"
+              style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%2206b6d4%22 stroke-width=%222%22%3e%3cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M6 9l6 6 6-6%22/%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+            >
+              <option value="" disabled selected hidden>
+                Please choose an option
+              </option>
+              <option value="academic">Academic matters</option>
+              <option value="admission">Admission and Registration</option>
+              <option value="exam">Exam division</option>
+              <option value="finance">Finance division</option>
+              <option value="affairs">Student affairs</option>
+              <option value="technical">Technical support</option>
+              <option value="others">Others</option>
+            </select>
+
+            <p class="text-xs text-gray-500 mt-2">
+              Choose the most relevant category so we can route your enquiry faster.
+            </p>
+
+            <p id="category-error" class="hidden text-xs text-red-400 mt-2">
+              Please select a category before submitting.
+            </p>
+          </div>
+
+          <!-- NAME -->
+          <div>
+            <label for="name" class="block text-sm font-semibold text-gray-200 mb-3">
+              Your Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+              placeholder="Enter your full name"
+            >
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <label for="email" class="block text-sm font-semibold text-gray-200 mb-3">
+              Your Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+              placeholder="Enter your email address"
+            >
+          </div>
+
+          <!-- MESSAGE -->
+          <div>
+            <label for="message" class="block text-sm font-semibold text-gray-200 mb-3">
+              Your Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="5"
+              class="w-full px-4 py-3 bg-slate-900/70 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all resize-none"
+              placeholder="Describe your issue or query in detail..."
+            ></textarea>
+          </div>
+
+          <!-- SUBMIT BUTTON -->
+          <button
+            type="submit"
+            class="w-full px-8 py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-3 mt-8 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 hover:shadow-xl hover:shadow-cyan-500/20 transition-all"
+          >
+            Contact Us
+          </button>
+
+        </form>
+
+        <!-- SUCCESS MESSAGE -->
+        <div id="form-success" class="hidden text-center py-8">
+          <div class="w-16 h-16 rounded-full bg-emerald-500/20 mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Request Submitted!</h3>
+          <p class="text-gray-400 mb-4">
+            Thank you for reaching out. We'll respond to your enquiry shortly.
+          </p>
+          <button
+            type="button"
+            class="text-cyan-400 hover:text-cyan-300 font-semibold text-sm"
+            onclick="location.reload()"
+          >
+            Submit Another Enquiry
+          </button>
+        </div>
+
+      </div>
+
+<!-- SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("helpdesk-form");
+  const category = document.getElementById("category");
+  const error = document.getElementById("category-error");
+  const success = document.getElementById("form-success");
+
+  // Change dropdown text color after selection
+  category.addEventListener("change", () => {
+    if (category.value) {
+      category.classList.remove("text-slate-300");
+      category.classList.add("text-white");
+      error.classList.add("hidden");
+      category.classList.remove("border-red-500");
+      category.classList.add("border-slate-600");
+    }
+  });
+
+  // Handle form submission
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (!category.value) {
+      error.classList.remove("hidden");
+      category.classList.remove("border-slate-600");
+      category.classList.add("border-red-500");
+      category.focus();
+      return;
+    }
+
+    // Simulate success (frontend demo)
+    form.classList.add("hidden");
+    success.classList.remove("hidden");
+  });
+
+});
+</script>
      </div>
     </div>
    </section>
   </div>
   <script>
+
+      const category = document.getElementById("category");
+      category.addEventListener("change", function () {
+        this.classList.add("text-cyan-300");
+      });
+
+
     const defaultConfig = {
       page_title: 'How Can We Assist You Today?',
       font_family: 'Plus Jakarta Sans',
