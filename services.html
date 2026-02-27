@@ -303,7 +303,11 @@
       // Function to wait for MSAL to be ready
       async function waitForMSAL() {
         let retries = 0;
-        while (!msalInstance && retries < 100) {  // Wait up to 10 seconds
+        const maxRetries = 200; // Wait up to 20 seconds
+        while (!msalInstance && retries < maxRetries) {
+          if (retries % 20 === 0) {
+            console.log(`Waiting for MSAL... ${retries / 10}s`);
+          }
           await new Promise(resolve => setTimeout(resolve, 100));
           retries++;
         }
@@ -312,8 +316,12 @@
 
       waitForMSAL().then((instance) => {
         if (!instance) {
-          console.error("MSAL still not initialized after 10 seconds");
-          alert("Authentication service is taking a long time to load. Please check your internet connection and refresh the page.");
+          console.error("MSAL still not initialized after 20 seconds");
+          console.error("MSAL library status:", typeof msal);
+          const errorMsg = typeof msal === "undefined" 
+            ? "MSAL library failed to load from CDN. Please check your internet connection and refresh the page."
+            : "Authentication service failed to initialize. Please refresh the page and try again.";
+          alert(errorMsg);
           return;
         }
         
