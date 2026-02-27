@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Resources - AIMST</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/dist/msal-browser.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -311,6 +312,103 @@
         ])
       });
     }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // ========= CONFIG (REPLACE THESE) =========
+        const AIMST_TENANT_ID = "YOUR_TENANT_ID";
+        const CLIENT_ID = "YOUR_CLIENT_ID";
+
+        // After successful login, redirect here:
+        const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
+
+        // ========= UI ELEMENTS =========
+        const loginBtn = document.getElementById("login-btn");
+        const loading = document.getElementById("loading-status");
+        const statusText = document.getElementById("status-text");
+        const errorBox = document.getElementById("error-message");
+        const errorText = document.getElementById("error-text");
+
+        const showLoading = (msg) => {
+          if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
+          if (loading) loading.classList.remove("hidden");
+          if (errorBox) errorBox.classList.add("hidden");
+        };
+
+        const showError = (msg) => {
+          if (errorText) errorText.textContent = msg || "Only AIMST organization accounts can access this portal.";
+          if (errorBox) errorBox.classList.remove("hidden");
+          if (loading) loading.classList.add("hidden");
+        };
+
+        // ========= MSAL INIT =========
+        const msalConfig = {
+          auth: {
+            clientId: CLIENT_ID,
+            authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`, // single-tenant
+            redirectUri: window.location.origin + window.location.pathname
+          },
+          cache: {
+            cacheLocation: "sessionStorage",
+            storeAuthStateInCookie: false
+          }
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+        function isAIMSTTenant(claimsOrAccount) {
+          const claims = claimsOrAccount?.idTokenClaims || claimsOrAccount;
+          return (claims?.tid || "").toLowerCase() === AIMST_TENANT_ID.toLowerCase();
+        }
+
+        // ========= HANDLE REDIRECT RETURN =========
+        try {
+          const response = await msalInstance.handleRedirectPromise();
+
+          // If we just returned from Microsoft login:
+          if (response) {
+            if (!isAIMSTTenant(response.idTokenClaims)) {
+              showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
+              return;
+            }
+            // ✅ success
+            window.location.href = SUCCESS_REDIRECT_URL;
+            return;
+          }
+
+          // If user is already signed in (refresh/open page again):
+          const accounts = msalInstance.getAllAccounts();
+          if (accounts.length > 0) {
+            const ok = accounts.some(acc => isAIMSTTenant(acc));
+            if (ok) {
+              showLoading("You are signed in. Redirecting...");
+              window.location.href = SUCCESS_REDIRECT_URL;
+              return;
+            } else {
+              showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
+            }
+          }
+        } catch (e) {
+          console.error(e);
+          showError("Login failed. Please try again.");
+        }
+
+        // ========= LOGIN BUTTON =========
+        if (loginBtn) {
+          loginBtn.addEventListener("click", async () => {
+            try {
+              showLoading("Redirecting to Microsoft sign-in...");
+              await msalInstance.loginRedirect({
+                scopes: ["openid", "profile", "email"],
+                prompt: "select_account"
+              });
+            } catch (e) {
+              console.error(e);
+              showError("Unable to start login. Please try again.");
+            }
+          });
+        }
+      });
+
   </script>
  <!-- Footer -->
  <!-- Footer -->
