@@ -410,6 +410,20 @@
         }
       });
 
+      loginBtn.addEventListener("click", async () => {
+        console.log("LOGIN BUTTON CLICKED");  // add this
+        try {
+            showLoading("Redirecting to Microsoft sign-in...");
+            await msalInstance.loginRedirect({
+            scopes: ["openid", "profile", "email"],
+            prompt: "select_account"
+            });
+        } catch (e) {
+            console.error(e);
+            showError("Unable to start login. Please try again.");
+        }
+        });
+
   </script>
  <!-- Footer -->
  <!-- Footer -->
