@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Resources - AIMST</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://alcdn.msauth.net/browser/2.26.0/js/msal-browser.min.js"></script>
-  <!-- MSAL loaded from official Microsoft CDN for reliable authentication -->
+  <script src="assets/msal-browser.min.js"></script>
+  <!-- MSAL will be loaded with fallback strategy in inline script below -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -31,7 +31,6 @@
     
     .gradient-border::before {
       content: '';
-      pointer-events: none;
       position: absolute;
       inset: 0;
       border-radius: inherit;
@@ -134,7 +133,7 @@
         <svg class="w-6 h-6 md:w-7 md:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
        </div>
-       <div><span class="font-bold text-lg md:text-xl text-white">AIMST</span> <span class="hidden sm:inline text-sm md:text-base text-cyan-400 ml-1">Lifelong Learning</span>
+       <div><span class="font-bold text-lg md:text-xl text-white">AIMST</span> <span class="hidden sm:inline text-sm md:text-base text-cyan-400 ml-1">Student Resources</span>
        </div>
       </div>
       <div class="hidden lg:flex items-center gap-8">
@@ -155,9 +154,8 @@
       </div>
      
      </div>
-    </div>
-      <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden lg:hidden bg-slate-900/95 backdrop-blur-lg border-t border-slate-800">
+    </div><!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-900/95 backdrop-blur-lg border-t border-slate-800">
         <div class="px-4 py-4 space-y-3">
             
             <a href="index.html#home" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Home</a>
@@ -171,17 +169,17 @@
             <a href="index.html#why-us" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Why AIMST ?</a>
             
             <a href="student_resource.html" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Student Resources</a>
-            
-            <a href="helpdesk.html" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Helpdesk</a> 
+
+            <a href="helpdesk.html" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Helpdesk</a>
             
             <a href="services.html" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Services</a>
             
-            <a href="faq.html" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">FAQ</a>
+            <a href="index.html#faq" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">FAQ</a>
             
             <a href="index.html#contact" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Contact</a>
 
         </div>
-      </div>
+     </div>
    </nav><!-- Hero Section -->
    <!-- Login Section -->
    <section class="hero-bg grid-pattern relative pt-20 sm:pt-24 lg:pt-32 pb-16 flex-1 flex items-center">
@@ -213,7 +211,7 @@
          <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
           <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
-         </div><span class="text-gray-300 text-sm">Redirects to facility booking after login</span>
+         </div><span class="text-gray-300 text-sm">Redirects to booking after login</span>
         </div>
        </div>
       </div><!-- Right: Login Card -->
@@ -224,7 +222,7 @@
        </div><!-- Card Title -->
        <h2 id="login-title" class="text-2xl md:text-3xl font-bold text-white text-center mb-2">Login with Microsoft</h2>
        <p id="login-subtitle" class="text-gray-400 text-center mb-8">Use your AIMST Microsoft account to continue.</p><!-- Login Button --> 
-       <button id="login-btn" type="button" class="w-full glow-btn px-6 py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-3 mb-4 transition-all" style="position: relative; z-index: 50; cursor: pointer; pointer-events: auto; border: none;">
+       <button id="login-btn" onclick="handleLoginClick()" type="button" class="w-full glow-btn px-6 py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-3 mb-4 transition-all" style="position: relative; z-index: 50; cursor: pointer; pointer-events: auto; border: none;">
         <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6v-11.4H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" />
         </svg><span id="btn-text">Login with Microsoft</span> </button> <!-- Status Messages (Hidden by default) -->
        <div id="loading-status" class="hidden text-center py-6">
@@ -242,137 +240,122 @@
          </div>
         </div>
        </div><!-- Helper Text -->
-       <p class="text-gray-500 text-xs text-center">After login, you'll be redirected to the facility booking page.</p>
+       <p class="text-gray-500 text-xs text-center">After login, you'll be redirected to the appointment booking page.</p>
       </div>
      </div>
     </div>
    </section>
 
   </div>
-<script>
-    // ====== CONFIG (keep these in sync with Azure App Registration) ======
-    const AIMST_TENANT_ID = "88635101-788c-405f-ab59-562c339fae3e";
-    const CLIENT_ID = "8907e140-7425-4afe-a725-b4576becfff0";
+  <script>
+  const AIMST_TENANT_ID = "88635101-788c-405f-ab59-562c339fae3e";
+  const CLIENT_ID = "8907e140-7425-4afe-a725-b4576becfff0";
+  const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
+  const REDIRECT_URI = "https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html";
 
-    // Must EXACTLY match an allowed Redirect URI in Azure (SPA)
-    const REDIRECT_URI = "https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html";
+  let msalInstance;
 
-    // Where to send the user after successful AIMST login
-    const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
+  document.addEventListener("DOMContentLoaded", async () => {
+    // UI refs
+    const statusText = document.getElementById("status-text");
+    const loading = document.getElementById("loading-status");
+    const errorBox = document.getElementById("error-message");
+    const errorText = document.getElementById("error-text");
+    const loginBtn = document.getElementById("login-btn");
 
-    // ====== UI helpers ======
-    const els = {};
-    function cacheEls() {
-      els.statusText = document.getElementById("status-text");
-      els.loading = document.getElementById("loading-status");
-      els.errorBox = document.getElementById("error-message");
-      els.errorText = document.getElementById("error-text");
-      els.loginBtn = document.getElementById("login-btn");
+    const showLoading = (msg) => {
+      if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
+      if (loading) loading.classList.remove("hidden");
+      if (errorBox) errorBox.classList.add("hidden");
+    };
+
+    const showError = (msg) => {
+      if (errorText) errorText.textContent = msg || "Only AIMST organization accounts can access this portal.";
+      if (errorBox) errorBox.classList.remove("hidden");
+      if (loading) loading.classList.add("hidden");
+    };
+
+    const isAIMSTTenant = (claimsOrAccount) => {
+      const claims = claimsOrAccount?.idTokenClaims || claimsOrAccount;
+      return (claims?.tid || "").toLowerCase() === AIMST_TENANT_ID.toLowerCase();
+    };
+
+    if (typeof msal === "undefined") {
+    console.error("MSAL not loaded. Check assets/msal-browser.min.js path.");
+    // Do NOT show "Access denied" here — just show a friendly message:
+    showError("Authentication library not loaded. Please refresh or contact support.");
+    return;
     }
 
-    function showLoading(message) {
-      if (els.statusText) els.statusText.textContent = message || "Redirecting to Microsoft sign-in...";
-      if (els.loading) els.loading.classList.remove("hidden");
-      if (els.errorBox) els.errorBox.classList.add("hidden");
-    }
+    // ✅ MSAL init (no waiting needed because local file loads first)
+    msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: CLIENT_ID,
+        authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
+        redirectUri: REDIRECT_URI
+      },
+      cache: { cacheLocation: "sessionStorage" }
+    });
 
-    function showError(message) {
-      if (els.errorText) els.errorText.textContent = message || "Only AIMST organization accounts can access this portal.";
-      if (els.errorBox) els.errorBox.classList.remove("hidden");
-      if (els.loading) els.loading.classList.add("hidden");
-    }
+    // ✅ Handle redirect return
+    try {
+      const response = await msalInstance.handleRedirectPromise();
 
-    function isAIMSTTenant(accountOrClaims) {
-      const claims = accountOrClaims?.idTokenClaims || accountOrClaims;
-      const tid = (claims?.tid || "").toLowerCase();
-      return tid === AIMST_TENANT_ID.toLowerCase();
-    }
-
-    // ====== MSAL init + flow ======
-    let msalInstance;
-
-    async function initAuth() {
-      if (typeof msal === "undefined" || !msal?.PublicClientApplication) {
-        showError("Authentication library not loaded. Please refresh or contact support.");
+      if (response) {
+        if (!isAIMSTTenant(response.idTokenClaims)) {
+          showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
+          return;
+        }
+        window.location.href = SUCCESS_REDIRECT_URL;
         return;
       }
 
-      msalInstance = new msal.PublicClientApplication({
-        auth: {
-          clientId: CLIENT_ID,
-          authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
-          redirectUri: REDIRECT_URI
-        },
-        cache: {
-          cacheLocation: "sessionStorage",
-          storeAuthStateInCookie: false
-        }
-      });
-
-      // Handle redirect response (after returning from Microsoft login)
-      try {
-        const response = await msalInstance.handleRedirectPromise();
-
-        // If we just came back from login redirect
-        if (response?.account) {
-          msalInstance.setActiveAccount(response.account);
-
-          if (!isAIMSTTenant(response.idTokenClaims)) {
-            showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
-            return;
-          }
-
-          // Success → go to your destination
-          window.location.assign(SUCCESS_REDIRECT_URL);
-          return;
-        }
-
-        // Otherwise, check existing cached accounts (if user already signed in)
-        const accounts = msalInstance.getAllAccounts();
-        const aimstAccount = accounts.find(isAIMSTTenant);
-
-        if (aimstAccount) {
-          msalInstance.setActiveAccount(aimstAccount);
-          showLoading("You are signed in. Redirecting...");
-          window.location.assign(SUCCESS_REDIRECT_URL);
-          return;
-        }
-
-        // If no account, stay on page and wait for button click.
-      } catch (err) {
-        console.error("MSAL redirect handling failed:", err);
-        // Helpful message for common misconfig
-        showError(
-          "Login failed. If this keeps happening, confirm the Redirect URI in Azure matches this page exactly and try again."
-        );
+      // already logged in?
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0 && accounts.some(isAIMSTTenant)) {
+        showLoading("You are signed in. Redirecting...");
+        window.location.href = SUCCESS_REDIRECT_URL;
+        return;
       }
+    } catch (e) {
+      console.error(e);
+      showError("Login failed. Please refresh and try again.");
     }
 
-    function wireLoginButton() {
-      if (!els.loginBtn) return;
-
-      els.loginBtn.addEventListener("click", async () => {
+    // ✅ Login button
+    if (loginBtn) {
+      loginBtn.addEventListener("click", async () => {
         try {
           showLoading("Redirecting to Microsoft sign-in...");
-
           await msalInstance.loginRedirect({
             scopes: ["openid", "profile", "email"],
             prompt: "select_account"
           });
-        } catch (err) {
-          console.error("MSAL loginRedirect failed:", err);
+        } catch (e) {
+          console.error(e);
           showError("Unable to start login. Please try again.");
         }
       });
     }
+  });
 
-    // ====== Boot ======
-    document.addEventListener("DOMContentLoaded", async () => {
-      cacheEls();
-      await initAuth();
-      wireLoginButton();
+  // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
     });
-  </script>
+
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+   
+</script>
  <!-- Footer -->
  <!-- Footer -->
    <footer class="bg-slate-950 border-t border-slate-800">
