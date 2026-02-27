@@ -224,7 +224,7 @@
        </div><!-- Card Title -->
        <h2 id="login-title" class="text-2xl md:text-3xl font-bold text-white text-center mb-2">Login with Microsoft</h2>
        <p id="login-subtitle" class="text-gray-400 text-center mb-8">Use your AIMST Microsoft account to continue.</p><!-- Login Button --> 
-       <button id="login-btn" onclick="handleLoginClick()" type="button" class="w-full glow-btn px-6 py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-3 mb-4 transition-all" style="position: relative; z-index: 50; cursor: pointer; pointer-events: auto; border: none;">
+       <button id="login-btn" type="button" class="w-full glow-btn px-6 py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-3 mb-4 transition-all" style="position: relative; z-index: 50; cursor: pointer; pointer-events: auto; border: none;">
         <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6v-11.4H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" />
         </svg><span id="btn-text">Login with Microsoft</span> </button> <!-- Status Messages (Hidden by default) -->
        <div id="loading-status" class="hidden text-center py-6">
@@ -249,98 +249,130 @@
    </section>
 
   </div>
-  <script>
-  const AIMST_TENANT_ID = "88635101-788c-405f-ab59-562c339fae3e";
-  const CLIENT_ID = "8907e140-7425-4afe-a725-b4576becfff0";
-  const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
-  const REDIRECT_URI = "https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html";
+<script>
+    // ====== CONFIG (keep these in sync with Azure App Registration) ======
+    const AIMST_TENANT_ID = "88635101-788c-405f-ab59-562c339fae3e";
+    const CLIENT_ID = "8907e140-7425-4afe-a725-b4576becfff0";
 
-  let msalInstance;
+    // Must EXACTLY match an allowed Redirect URI in Azure (SPA)
+    const REDIRECT_URI = "https://soman2510.github.io/AIMST-LIFELONG-LEARNING-DRAFT/services.html";
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    // UI refs
-    const statusText = document.getElementById("status-text");
-    const loading = document.getElementById("loading-status");
-    const errorBox = document.getElementById("error-message");
-    const errorText = document.getElementById("error-text");
-    const loginBtn = document.getElementById("login-btn");
+    // Where to send the user after successful AIMST login
+    const SUCCESS_REDIRECT_URL = "https://calendly.com/odl-aimst";
 
-    const showLoading = (msg) => {
-      if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
-      if (loading) loading.classList.remove("hidden");
-      if (errorBox) errorBox.classList.add("hidden");
-    };
-
-    const showError = (msg) => {
-      if (errorText) errorText.textContent = msg || "Only AIMST organization accounts can access this portal.";
-      if (errorBox) errorBox.classList.remove("hidden");
-      if (loading) loading.classList.add("hidden");
-    };
-
-    const isAIMSTTenant = (claimsOrAccount) => {
-      const claims = claimsOrAccount?.idTokenClaims || claimsOrAccount;
-      return (claims?.tid || "").toLowerCase() === AIMST_TENANT_ID.toLowerCase();
-    };
-
-    if (typeof msal === "undefined") {
-    console.error("MSAL not loaded. Check assets/msal-browser.min.js path.");
-    // Do NOT show "Access denied" here — just show a friendly message:
-    showError("Authentication library not loaded. Please refresh or contact support.");
-    return;
+    // ====== UI helpers ======
+    const els = {};
+    function cacheEls() {
+      els.statusText = document.getElementById("status-text");
+      els.loading = document.getElementById("loading-status");
+      els.errorBox = document.getElementById("error-message");
+      els.errorText = document.getElementById("error-text");
+      els.loginBtn = document.getElementById("login-btn");
     }
 
-    // ✅ MSAL init (no waiting needed because local file loads first)
-    msalInstance = new msal.PublicClientApplication({
-      auth: {
-        clientId: CLIENT_ID,
-        authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
-        redirectUri: REDIRECT_URI
-      },
-      cache: { cacheLocation: "sessionStorage" }
-    });
+    function showLoading(message) {
+      if (els.statusText) els.statusText.textContent = message || "Redirecting to Microsoft sign-in...";
+      if (els.loading) els.loading.classList.remove("hidden");
+      if (els.errorBox) els.errorBox.classList.add("hidden");
+    }
 
-    // ✅ Handle redirect return
-    try {
-      const response = await msalInstance.handleRedirectPromise();
+    function showError(message) {
+      if (els.errorText) els.errorText.textContent = message || "Only AIMST organization accounts can access this portal.";
+      if (els.errorBox) els.errorBox.classList.remove("hidden");
+      if (els.loading) els.loading.classList.add("hidden");
+    }
 
-      if (response) {
-        if (!isAIMSTTenant(response.idTokenClaims)) {
-          showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
+    function isAIMSTTenant(accountOrClaims) {
+      const claims = accountOrClaims?.idTokenClaims || accountOrClaims;
+      const tid = (claims?.tid || "").toLowerCase();
+      return tid === AIMST_TENANT_ID.toLowerCase();
+    }
+
+    // ====== MSAL init + flow ======
+    let msalInstance;
+
+    async function initAuth() {
+      if (typeof msal === "undefined" || !msal?.PublicClientApplication) {
+        showError("Authentication library not loaded. Please refresh or contact support.");
+        return;
+      }
+
+      msalInstance = new msal.PublicClientApplication({
+        auth: {
+          clientId: CLIENT_ID,
+          authority: `https://login.microsoftonline.com/${AIMST_TENANT_ID}`,
+          redirectUri: REDIRECT_URI
+        },
+        cache: {
+          cacheLocation: "sessionStorage",
+          storeAuthStateInCookie: false
+        }
+      });
+
+      // Handle redirect response (after returning from Microsoft login)
+      try {
+        const response = await msalInstance.handleRedirectPromise();
+
+        // If we just came back from login redirect
+        if (response?.account) {
+          msalInstance.setActiveAccount(response.account);
+
+          if (!isAIMSTTenant(response.idTokenClaims)) {
+            showError("Access denied. Please sign in using an AIMST organization Microsoft account.");
+            return;
+          }
+
+          // Success → go to your destination
+          window.location.assign(SUCCESS_REDIRECT_URL);
           return;
         }
-        window.location.href = SUCCESS_REDIRECT_URL;
-        return;
-      }
 
-      // already logged in?
-      const accounts = msalInstance.getAllAccounts();
-      if (accounts.length > 0 && accounts.some(isAIMSTTenant)) {
-        showLoading("You are signed in. Redirecting...");
-        window.location.href = SUCCESS_REDIRECT_URL;
-        return;
+        // Otherwise, check existing cached accounts (if user already signed in)
+        const accounts = msalInstance.getAllAccounts();
+        const aimstAccount = accounts.find(isAIMSTTenant);
+
+        if (aimstAccount) {
+          msalInstance.setActiveAccount(aimstAccount);
+          showLoading("You are signed in. Redirecting...");
+          window.location.assign(SUCCESS_REDIRECT_URL);
+          return;
+        }
+
+        // If no account, stay on page and wait for button click.
+      } catch (err) {
+        console.error("MSAL redirect handling failed:", err);
+        // Helpful message for common misconfig
+        showError(
+          "Login failed. If this keeps happening, confirm the Redirect URI in Azure matches this page exactly and try again."
+        );
       }
-    } catch (e) {
-      console.error(e);
-      showError("Login failed. Please refresh and try again.");
     }
 
-    // ✅ Login button
-    if (loginBtn) {
-      loginBtn.addEventListener("click", async () => {
+    function wireLoginButton() {
+      if (!els.loginBtn) return;
+
+      els.loginBtn.addEventListener("click", async () => {
         try {
           showLoading("Redirecting to Microsoft sign-in...");
+
           await msalInstance.loginRedirect({
             scopes: ["openid", "profile", "email"],
             prompt: "select_account"
           });
-        } catch (e) {
-          console.error(e);
+        } catch (err) {
+          console.error("MSAL loginRedirect failed:", err);
           showError("Unable to start login. Please try again.");
         }
       });
     }
-  });
-</script>
+
+    // ====== Boot ======
+    document.addEventListener("DOMContentLoaded", async () => {
+      cacheEls();
+      await initAuth();
+      wireLoginButton();
+    });
+  </script>
  <!-- Footer -->
  <!-- Footer -->
    <footer class="bg-slate-950 border-t border-slate-800">
