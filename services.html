@@ -294,27 +294,40 @@
 
     function handleLoginClick() {
       console.log("Login button clicked!");
-      if (!msalInstance) {
-        alert("MSAL is initializing. Please try again in a moment.");
-        return;
-      }
       
-      const showLoading = (msg) => {
-        if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
-        if (loading) loading.classList.remove("hidden");
-        if (errorBox) errorBox.classList.add("hidden");
-      };
-
-      try {
-        showLoading("Redirecting to Microsoft sign-in...");
-        msalInstance.loginRedirect({
-          scopes: ["openid", "profile", "email"],
-          prompt: "select_account"
-        });
-      } catch (e) {
-        console.error(e);
-        alert("Unable to start login. Please try again.");
+      // Function to wait for MSAL to be ready
+      async function waitForMSAL() {
+        let retries = 0;
+        while (!msalInstance && retries < 20) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+        return msalInstance;
       }
+
+      waitForMSAL().then((instance) => {
+        if (!instance) {
+          alert("Failed to initialize authentication. Please refresh the page and try again.");
+          return;
+        }
+        
+        const showLoading = (msg) => {
+          if (statusText) statusText.textContent = msg || "Redirecting to Microsoft sign-in...";
+          if (loading) loading.classList.remove("hidden");
+          if (errorBox) errorBox.classList.add("hidden");
+        };
+
+        try {
+          showLoading("Redirecting to Microsoft sign-in...");
+          instance.loginRedirect({
+            scopes: ["openid", "profile", "email"],
+            prompt: "select_account"
+          });
+        } catch (e) {
+          console.error(e);
+          alert("Unable to start login. Please try again.");
+        }
+      });
     }
 
       // Mobile menu toggle (SAFE)
