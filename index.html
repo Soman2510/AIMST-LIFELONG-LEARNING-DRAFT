@@ -418,7 +418,7 @@
     </div>
    </section><!-- Course Detail Modal -->
    <div id="course-modal" class="hidden fixed inset-0 bg-black/50 modal-backdrop z-50 flex items-center justify-center p-4" style="height: 100%;">
-    <div class="bg-slate-800 rounded-2xl modal-content max-w-2xl w-full max-h-96 overflow-y-auto">
+    <div class="bg-slate-900 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto p-10 relative">
      <div class="sticky top-0 bg-slate-800 border-b border-slate-700 p-6 flex items-start justify-between">
       <div>
        <div id="modal-badge" class="course-badge bg-cyan-500/20 text-cyan-300 mb-2"></div>
@@ -428,17 +428,46 @@
        </svg></button>
      </div>
      <div class="p-6 space-y-6">
-      <div>
-       <h3 class="text-lg font-semibold text-cyan-400 mb-3">Course Description</h3>
-       <p id="modal-description" class="text-gray-300 leading-relaxed"></p>
-      </div>
-      <div>
-       <h3 class="text-lg font-semibold text-cyan-400 mb-3">Programme Outline</h3>
-       <ul id="modal-outline" class="space-y-2 text-gray-300"></ul>
-      </div>
-      <div>
-       <h3 class="text-lg font-semibold text-cyan-400 mb-3">Career Opportunities</h3>
-       <ul id="modal-careers" class="space-y-2 text-gray-300"></ul>
+        <!-- 1. Course Description -->
+        <div>
+          <h3 class="text-2xl font-bold text-white mb-4">Course Description</h3>
+          <p id="modal-description" class="leading-relaxed text-gray-400"></p>
+        </div>
+
+        <!-- 2. Programme Outline -->
+        <div>
+          <h3 class="text-2xl font-bold text-white mb-6">Programme Outline</h3>
+          <div id="modal-outline" class="grid md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- 3. Trainer Profile -->
+        <div>
+          <h3 class="text-2xl font-bold text-white mb-6">Trainer's Profile</h3>
+
+          <div class="bg-slate-800/60 rounded-xl p-6 flex flex-col md:flex-row gap-8 items-start">
+            
+            <!-- Profile Image -->
+            <img id="trainer-image"
+                src=""
+                class="w-40 h-40 object-cover rounded-xl border border-cyan-500/30"
+                alt="Trainer">
+
+            <!-- Profile Info -->
+            <div class="flex-1 space-y-3 text-sm">
+              <p><span class="text-gray-400">Name:</span> <span id="trainer-name" class="text-white font-semibold"></span></p>
+              <p><span class="text-gray-400">Qualifications:</span> <span id="trainer-qualifications"></span></p>
+              <p><span class="text-gray-400">Department:</span> <span id="trainer-department"></span></p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4. Career Opportunity -->
+        <div>
+          <h3 class="text-2xl font-bold text-white mb-4">Career Opportunities</h3>
+          <p id="career-description" class="mb-6 text-gray-400"></p>
+          <div id="career-list" class="grid md:grid-cols-2 gap-4"></div>
+        </div>
       </div><button id="modal-apply" class="w-full glow-btn px-6 py-3 rounded-xl text-white font-semibold mt-6">Apply Now</button>
      </div>
     </div>
@@ -930,7 +959,56 @@
       { id: 10, name: 'Master in Physiotherapy (Musculoskeletal)', category: 'Micro', badge: 'Microcredential', description: 'Specialized master program focusing on musculoskeletal disorders, advanced treatment techniques, and research in physiotherapy. For professionals seeking specialization.', outline: ['• Advanced Musculoskeletal Assessment', '• Orthopedic Surgery Principles', '• Advanced Manual Therapy', '• Evidence-Based Practice', '• Clinical Research Methods', '• Thesis in Specialization', '• Duration: 18 months', '• Assessment: Clinical Cases, Exams, Research'], careers: ['Musculoskeletal Specialist', 'Orthopedic Consultant', 'Clinical Researcher', 'Healthcare Director', 'University Professor'] },
 
       // Certifications
-      { id: 11, name: 'Machine Learning', category: 'Cert', badge: 'Certification Programme', description: 'Professional certification in machine learning and artificial intelligence. Covers algorithms, neural networks, deep learning, and real-world applications using Python and industry tools.', outline: ['• Machine Learning Fundamentals', '• Supervised & Unsupervised Learning', '• Neural Networks & Deep Learning', '• Natural Language Processing', '• Computer Vision Basics', '• Capstone ML Project', '• Duration: 10 weeks', '• Assessment: Projects, Exams, Portfolio'], careers: ['ML Engineer', 'AI Specialist', 'Data Scientist', 'Research Engineer', 'Analytics Manager'] },
+      {
+        id: 11,
+        name: "Certification Programme in Machine Learning",
+        category: "Cert",
+        badge: "Certification Programme",
+        image: "assets/programs/ml.jpg",
+
+        description: "This course provides a deep dive into the fundamental concepts and practical techniques essential for understanding and implementing machine learning algorithms...",
+
+        outline: [
+          "Mathematical Basics 1 - Introduction to Machine Learning, Linear Algebra",
+          "Mathematical Basics 2 - Probability",
+          "Computational Basics - Numerical Computation and Optimization",
+          "Linear & Logistic Regression",
+          "Neural Networks",
+          "Convolutional Neural Networks 1",
+          "Convolutional Neural Networks 2",
+          "Recurrent Neural Networks (RNN, LSTM, GRU)",
+          "Classical Techniques 1",
+          "Classical Techniques 2"
+        ],
+
+        trainer: {
+          image: "assets/trainers/raman.jpg",
+          name: "Mr. Raman Raguraman",
+          qualifications: "Chartered Engineer - Engineering Council UK, M.Eng Power Systems, Certification in ML, Deep Learning (IIT Madras)",
+          department: "Faculty of Engineering and Computer Technology"
+        },
+
+        careerDescription: "A Certification Programme in Machine Learning equips students with knowledge and skills in data analysis and predictive modeling.",
+
+        careers: [
+          "Machine Learning Engineer",
+          "Data Scientist",
+          "AI Research Scientist",
+          "Data Analyst",
+          "Business Intelligence Developer",
+          "Computer Vision Engineer",
+          "NLP Engineer",
+          "Robotics Engineer",
+          "Big Data Engineer",
+          "Quantitative Analyst",
+          "Software Engineer (ML Focus)",
+          "Data Engineer",
+          "AI Product Manager",
+          "Deep Learning Specialist",
+          "AI Ethics Specialist",
+          "Automation Engineer"
+        ]
+      }
       { id: 12, name: 'Foundational AR Development Using Unity', category: 'Cert', badge: 'Certification Programme', description: 'Learn to develop augmented reality applications using the Unity game engine. Covers AR kit integration, 3D modeling, interaction design, and mobile deployment.', outline: ['• Unity Engine Fundamentals', '• AR Kit & Platform Integration', '• 3D Modeling & Animation', '• Interaction Design for AR', '• Mobile App Development', '• AR Project Deployment', '• Duration: 8 weeks', '• Assessment: Projects, Code Review, Final App'], careers: ['AR Developer', 'Game Developer', 'Mixed Reality Engineer', 'Technical Artist', 'Product Designer'] },
       { id: 13, name: 'Internet of Things (IoT)', category: 'Cert', badge: 'Certification Programme', description: 'Comprehensive certification in IoT technologies including sensors, connectivity, cloud platforms, and embedded systems. Hands-on projects with real IoT hardware.', outline: ['• IoT Architecture & Protocols', '• Sensors & Embedded Systems', '• Cloud Platforms & Edge Computing', '• Data Analytics for IoT', '• Security & Privacy', '• IoT Solution Design', '• Duration: 10 weeks', '• Assessment: Lab Work, Projects, Capstone'], careers: ['IoT Engineer', 'Systems Architect', 'Hardware Developer', 'Solutions Engineer', 'Technical Specialist'] },
       { id: 14, name: 'Accounting & Finance for Managers', category: 'Cert', badge: 'Certification Programme', description: 'Essential financial literacy for managers and leaders. Covers financial statements, budgeting, cost analysis, and strategic financial decision-making.', outline: ['• Financial Statement Analysis', '• Cost Accounting & Budgeting', '• Forecasting & Planning', '• Working Capital Management', '• Investment Decision Analysis', '• Financial Reporting', '• Duration: 6 weeks', '• Assessment: Exams, Case Studies, Reports'], careers: ['Financial Manager', 'CFO', 'Business Analyst', 'Controller', 'Finance Director'] },
@@ -1005,19 +1083,31 @@
     }
 
     function openCourseModal(course) {
-      const modal = document.getElementById('course-modal');
-      document.getElementById('modal-badge').textContent = course.badge;
-      document.getElementById('modal-badge').className = `course-badge ${getCategoryColor(course.category)}`;
-      document.getElementById('modal-title').textContent = course.name;
-      document.getElementById('modal-description').textContent = course.description;
-      
-      const outlineList = document.getElementById('modal-outline');
-      outlineList.innerHTML = course.outline.map(item => `<li class="flex items-start gap-3"><span class="text-cyan-400 flex-shrink-0">✓</span><span>${item}</span></li>`).join('');
-      
-      const careersList = document.getElementById('modal-careers');
-      careersList.innerHTML = course.careers.map(career => `<li class="flex items-start gap-3"><span class="text-cyan-400 flex-shrink-0">→</span><span>${career}</span></li>`).join('');
-      
-      modal.classList.remove('hidden');
+
+      document.getElementById("modal-description").innerText = course.description;
+
+      // Programme outline
+      const outlineContainer = document.getElementById("modal-outline");
+      outlineContainer.innerHTML = course.outline.map(item =>
+        `<div class="bg-slate-800/50 p-4 rounded-lg text-sm">${item}</div>`
+      ).join("");
+
+      // Trainer
+      document.getElementById("trainer-image").src = course.trainer.image;
+      document.getElementById("trainer-name").innerText = course.trainer.name;
+      document.getElementById("trainer-qualifications").innerText = course.trainer.qualifications;
+      document.getElementById("trainer-department").innerText = course.trainer.department;
+
+      // Career description
+      document.getElementById("career-description").innerText = course.careerDescription;
+
+      // Career list
+      const careerList = document.getElementById("career-list");
+      careerList.innerHTML = course.careers.map(career =>
+        `<div class="bg-slate-800/50 p-4 rounded-lg text-sm">${career}</div>`
+      ).join("");
+
+      document.getElementById("course-modal").classList.remove("hidden");
     }
 
     function closeCourseModal() {
