@@ -163,6 +163,34 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
+
+      .program-card-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* dark overlay for readability */
+  .program-card-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.85),
+      rgba(15, 23, 42, 0.55)
+    );
+    pointer-events: none;
+  }
+
+  /* keep card content above overlay */
+  .program-card-content {
+    position: relative;
+    z-index: 1;
+  }
+
   </style>
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -389,7 +417,6 @@
      </div>
     </div>
    </section><!-- Course Detail Modal -->
-   <section id="programs" class="py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative"></section>
    <div id="course-modal" class="hidden fixed inset-0 bg-black/50 modal-backdrop z-50 flex items-center justify-center p-4" style="height: 100%;">
     <div class="bg-slate-800 rounded-2xl modal-content max-w-2xl w-full max-h-96 overflow-y-auto">
      <div class="sticky top-0 bg-slate-800 border-b border-slate-700 p-6 flex items-start justify-between">
@@ -889,8 +916,8 @@
     // Comprehensive course database
     const coursesDatabase = [
       // ODL Programs
-      { id: 1, name: 'Master of Business Administration (MBA)', category: 'ODL', badge: 'Open Distance Learning', description: 'The MBA program at AIMST is designed for working professionals seeking advanced business knowledge. This comprehensive 2-year program covers strategic management, finance, entrepreneurship, and organizational leadership through online learning modules and virtual case studies.', outline: ['• Strategic Management & Business Policy', '• Financial Management & Analysis', '• Marketing Strategy & Consumer Behavior', '• Organizational Leadership & Change Management', '• Global Business & International Trade', '• Capstone Project & Thesis', '• Duration: 24 months', '• Assessment: Assignments, Exams, Project'], careers: ['Business Manager', 'Executive Director', 'Management Consultant', 'Entrepreneur', 'Financial Analyst', 'Corporate Strategist', 'Operations Manager'] },
-      { id: 2, name: 'Bachelor in Nursing Science (Honours)', category: 'ODL', badge: 'Open Distance Learning', description: 'This comprehensive nursing degree combines theoretical knowledge with practical clinical skills. Students learn patient care, medical ethics, and public health through online lectures, virtual labs, and supervised clinical placements.', outline: ['• Fundamentals of Nursing Practice', '• Anatomy, Physiology & Pathology', '• Pharmacology & Drug Therapeutics', '• Clinical Assessment & Diagnosis', '• Mental Health & Psychiatric Nursing', '• Community Health Nursing', '• Duration: 36 months', '• Assessment: Practicals, Clinical Hours, Thesis'], careers: ['Registered Nurse', 'Clinical Nurse Specialist', 'Nurse Manager', 'Public Health Nurse', 'Nurse Educator', 'Hospital Administrator', 'Healthcare Consultant'] },
+      { id: 1, name: 'Master of Business Administration (MBA)', category: 'ODL', badge: 'Open Distance Learning', image: 'assets/programs/mba.jpg', description: 'The MBA program at AIMST is designed for working professionals seeking advanced business knowledge. This comprehensive 2-year program covers strategic management, finance, entrepreneurship, and organizational leadership through online learning modules and virtual case studies.', outline: ['• Strategic Management & Business Policy', '• Financial Management & Analysis', '• Marketing Strategy & Consumer Behavior', '• Organizational Leadership & Change Management', '• Global Business & International Trade', '• Capstone Project & Thesis', '• Duration: 24 months', '• Assessment: Assignments, Exams, Project'], careers: ['Business Manager', 'Executive Director', 'Management Consultant', 'Entrepreneur', 'Financial Analyst', 'Corporate Strategist', 'Operations Manager'] },
+      { id: 2, name: 'Bachelor in Nursing Science (Honours)', category: 'ODL', badge: 'Open Distance Learning', image: 'assets/programs/bns.jpg', description: 'This comprehensive nursing degree combines theoretical knowledge with practical clinical skills. Students learn patient care, medical ethics, and public health through online lectures, virtual labs, and supervised clinical placements.', outline: ['• Fundamentals of Nursing Practice', '• Anatomy, Physiology & Pathology', '• Pharmacology & Drug Therapeutics', '• Clinical Assessment & Diagnosis', '• Mental Health & Psychiatric Nursing', '• Community Health Nursing', '• Duration: 36 months', '• Assessment: Practicals, Clinical Hours, Thesis'], careers: ['Registered Nurse', 'Clinical Nurse Specialist', 'Nurse Manager', 'Public Health Nurse', 'Nurse Educator', 'Hospital Administrator', 'Healthcare Consultant'] },
       
       // Microcredentials
       { id: 3, name: 'Diploma in Electrical and Electronic Engineering', category: 'Micro', badge: 'Microcredential', description: 'A specialized diploma covering electrical systems, circuit design, and electronic components. Perfect for professionals seeking advanced technical credentials in engineering fields.', outline: ['• Circuit Analysis & Design', '• Power Systems Engineering', '• Electronic Devices & Applications', '• Digital Electronics', '• Microcontroller Programming', '• Project Design & Implementation', '• Duration: 12 weeks', '• Assessment: Lab Work, Exams, Project'], careers: ['Electrical Engineer', 'Electronics Technician', 'Power Systems Specialist', 'Systems Integrator', 'Technical Manager'] },
@@ -934,19 +961,28 @@
         filtered = filtered.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
       }
 
-      grid.innerHTML = filtered.map(course => `
-        <div class="card-hover gradient-border rounded-2xl p-6 bg-slate-800/50 backdrop-blur cursor-pointer" data-course-id="${course.id}">
-          <div class="course-badge ${getCategoryColor(course.category)} mb-3">${course.badge}</div>
-          <h3 class="text-lg font-bold text-white mb-2">${course.name}</h3>
-          <p class="text-gray-400 text-sm mb-4 line-clamp-2">${course.description}</p>
-          <div class="flex items-center justify-between">
-            <span class="text-cyan-400 text-sm font-semibold">View Details</span>
-            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
+    grid.innerHTML = filtered.map(course => {
+      const bg = course.image ? `background-image:url('${course.image}')` : '';
+      return `
+        <div
+          class="card-hover gradient-border rounded-2xl p-6 backdrop-blur cursor-pointer program-card-bg"
+          style="${bg}"
+          data-course-id="${course.id}"
+        >
+          <div class="program-card-content">
+            <div class="course-badge ${getCategoryColor(course.category)} mb-3">${course.badge}</div>
+            <h3 class="text-lg font-bold text-white mb-2">${course.name}</h3>
+            <p class="text-gray-200/90 text-sm mb-4 line-clamp-2">${course.description}</p>
+            <div class="flex items-center justify-between">
+              <span class="text-cyan-300 text-sm font-semibold">View Details</span>
+              <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
           </div>
         </div>
-      `).join('');
+      `;
+    }).join('');
 
       // Add click handlers
       grid.querySelectorAll('[data-course-id]').forEach(card => {
