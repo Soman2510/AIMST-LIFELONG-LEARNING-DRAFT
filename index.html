@@ -1083,32 +1083,36 @@
     }
 
     function openCourseModal(course) {
+      document.getElementById('modal-badge').textContent = course.badge;
+      document.getElementById('modal-badge').className = `course-badge ${getCategoryColor(course.category)}`;
+      document.getElementById('modal-title').textContent = course.name;
+      document.getElementById("modal-description").innerText = course.description || "";
 
-      document.getElementById("modal-description").innerText = course.description;
-
-      // Programme outline
+      // outline (safe)
       const outlineContainer = document.getElementById("modal-outline");
-      outlineContainer.innerHTML = course.outline.map(item =>
+      outlineContainer.innerHTML = (course.outline || []).map(item =>
         `<div class="bg-slate-800/50 p-4 rounded-lg text-sm">${item}</div>`
       ).join("");
 
-      // Trainer
-      document.getElementById("trainer-image").src = course.trainer.image;
-      document.getElementById("trainer-name").innerText = course.trainer.name;
-      document.getElementById("trainer-qualifications").innerText = course.trainer.qualifications;
-      document.getElementById("trainer-department").innerText = course.trainer.department;
+      // trainer (safe)
+      const trainer = course.trainer || null;
+      document.getElementById("trainer-image").src = trainer?.image || "assets/trainers/default.jpg";
+      document.getElementById("trainer-name").innerText = trainer?.name || "To be announced";
+      document.getElementById("trainer-qualifications").innerText = trainer?.qualifications || "-";
+      document.getElementById("trainer-department").innerText = trainer?.department || "-";
 
-      // Career description
-      document.getElementById("career-description").innerText = course.careerDescription;
+      // career description (safe)
+      document.getElementById("career-description").innerText = course.careerDescription || "";
 
-      // Career list
+      // careers list (safe)
       const careerList = document.getElementById("career-list");
-      careerList.innerHTML = course.careers.map(career =>
+      careerList.innerHTML = (course.careers || []).map(career =>
         `<div class="bg-slate-800/50 p-4 rounded-lg text-sm">${career}</div>`
       ).join("");
 
       document.getElementById("course-modal").classList.remove("hidden");
     }
+
 
     function closeCourseModal() {
       document.getElementById('course-modal').classList.add('hidden');
