@@ -200,6 +200,21 @@
   z-index: 1;
 }
 
+/* Glass overlay for readability (light theme) */
+.program-card:hover::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transition: transform 1s ease;
+  background: linear-gradient(
+    135deg,
+    #d4b66c72 0%,
+    rgb(255, 247, 173) 55%,
+    rgba(39, 171, 171, 0.616) 100%
+  );
+  z-index: 1;
+}
+
 /* Content sits above overlay */
 .program-card-content{
   position: relative;
