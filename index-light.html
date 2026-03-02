@@ -631,25 +631,97 @@
       </div>
       <div class="relative hidden lg:block">
        <div class="floating">
-        <svg class="w-full h-auto max-w-lg mx-auto" viewbox="0 0 500 400" fill="none"><!-- Main laptop/screen --> <rect x="80" y="60" width="340" height="220" rx="12" fill="#1e293b" stroke="url(#grad1)" stroke-width="2" /> <rect x="100" y="80" width="300" height="180" rx="8" fill="#0f172a" /> <!-- Screen content - code/learning interface --> <rect x="120" y="100" width="120" height="8" rx="4" fill="#06b6d4" opacity="0.7" /> <rect x="120" y="120" width="180" height="6" rx="3" fill="#3b82f6" opacity="0.5" /> <rect x="120" y="138" width="150" height="6" rx="3" fill="#8b5cf6" opacity="0.4" /> <rect x="120" y="156" width="200" height="6" rx="3" fill="#06b6d4" opacity="0.3" /> <!-- Video call windows --> <rect x="290" y="100" width="90" height="60" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="1" /> <circle cx="335" cy="125" r="15" fill="#3b82f6" opacity="0.5" /> <circle cx="335" cy="122" r="8" fill="#e2e8f0" /> <rect x="290" y="170" width="90" height="60" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1" /> <circle cx="335" cy="195" r="15" fill="#06b6d4" opacity="0.5" /> <circle cx="335" cy="192" r="8" fill="#e2e8f0" /> <!-- Laptop base --> <path d="M60 280 L80 260 L420 260 L440 280 L60 280" fill="#1e293b" /> <rect x="60" y="280" width="380" height="15" rx="4" fill="#334155" /> <!-- Floating elements --> <circle cx="60" cy="120" r="30" fill="url(#grad2)" opacity="0.8" /> <path d="M50 120 L60 110 L70 120 L60 130 Z" fill="white" /> <circle cx="440" cy="180" r="25" fill="url(#grad2)" opacity="0.8" /> <rect x="432" y="172" width="16" height="16" rx="2" fill="white" /> <!-- Graduation cap floating --> <g transform="translate(420, 80)">
-          <polygon points="25,15 50,0 75,15 50,30" fill="#06b6d4" />
-          <rect x="45" y="15" width="10" height="20" fill="#0891b2" />
-          <line x1="50" y1="15" x2="50" y2="35" stroke="#fbbf24" stroke-width="2" />
-          <circle cx="50" cy="38" r="4" fill="#fbbf24" />
-         </g> <!-- Books stack --> <g transform="translate(30, 200)">
-          <rect x="0" y="20" width="50" height="12" rx="2" fill="#3b82f6" />
-          <rect x="5" y="10" width="45" height="12" rx="2" fill="#06b6d4" />
-          <rect x="2" y="0" width="48" height="12" rx="2" fill="#8b5cf6" />
-         </g> <defs>
-          <lineargradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-           <stop offset="0%" stop-color="#06b6d4" />
-           <stop offset="100%" stop-color="#3b82f6" />
-          </lineargradient>
-          <lineargradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-           <stop offset="0%" stop-color="#06b6d4" />
-           <stop offset="100%" stop-color="#8b5cf6" />
-          </lineargradient>
-         </defs>
+       <svg class="w-full h-auto max-w-lg mx-auto" viewBox="0 0 500 400" fill="none">
+
+        <!-- Main laptop frame -->
+        <rect x="80" y="60" width="340" height="220" rx="12"
+                fill="#1f2937"
+                stroke="url(#grad1)" stroke-width="2" />
+
+        <!-- Screen -->
+        <rect x="100" y="80" width="300" height="180" rx="8"
+                fill="#0f172a" />
+
+        <!-- Screen content lines -->
+        <rect x="120" y="100" width="120" height="8" rx="4"
+                fill="#27abab" opacity="0.8" />
+        <rect x="120" y="120" width="180" height="6" rx="3"
+                fill="#1f8f8f" opacity="0.6" />
+        <rect x="120" y="138" width="150" height="6" rx="3"
+                fill="#d6b56b" opacity="0.5" />
+        <rect x="120" y="156" width="200" height="6" rx="3"
+                fill="#27abab" opacity="0.4" />
+
+        <!-- Video windows -->
+        <rect x="290" y="100" width="90" height="60" rx="6"
+                fill="#1f2937"
+                stroke="#27abab" stroke-width="1.5" />
+
+        <circle cx="335" cy="125" r="15"
+                fill="#27abab" opacity="0.5" />
+        <circle cx="335" cy="122" r="8"
+                fill="#e5e7eb" />
+
+        <rect x="290" y="170" width="90" height="60" rx="6"
+                fill="#1f2937"
+                stroke="#d6b56b" stroke-width="1.5" />
+
+        <circle cx="335" cy="195" r="15"
+                fill="#d6b56b" opacity="0.6" />
+        <circle cx="335" cy="192" r="8"
+                fill="#f3f4f6" />
+
+        <!-- Laptop base -->
+        <path d="M60 280 L80 260 L420 260 L440 280 L60 280"
+                fill="#1f2937" />
+        <rect x="60" y="280" width="380" height="15" rx="4"
+                fill="#374151" />
+
+        <!-- Floating elements -->
+        <circle cx="60" cy="120" r="30"
+                fill="url(#grad2)" opacity="0.8" />
+        <path d="M50 120 L60 110 L70 120 L60 130 Z"
+                fill="white" />
+
+        <circle cx="440" cy="180" r="25"
+                fill="url(#grad2)" opacity="0.8" />
+        <rect x="432" y="172" width="16" height="16"
+                rx="2" fill="white" />
+
+        <!-- Graduation cap -->
+        <g transform="translate(420, 80)">
+            <polygon points="25,15 50,0 75,15 50,30"
+                    fill="#27abab" />
+            <rect x="45" y="15" width="10" height="20"
+                fill="#1f8f8f" />
+            <line x1="50" y1="15" x2="50" y2="35"
+                stroke="#d6b56b" stroke-width="2" />
+            <circle cx="50" cy="38" r="4"
+                    fill="#d6b56b" />
+        </g>
+
+        <!-- Books -->
+        <g transform="translate(30, 200)">
+            <rect x="0" y="20" width="50" height="12"
+                rx="2" fill="#d6b56b" />
+            <rect x="5" y="10" width="45" height="12"
+                rx="2" fill="#27abab" />
+            <rect x="2" y="0" width="48" height="12"
+                rx="2" fill="#1f8f8f" />
+        </g>
+
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#27abab" />
+            <stop offset="100%" stop-color="#d6b56b" />
+            </linearGradient>
+
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#27abab" />
+            <stop offset="100%" stop-color="#1f8f8f" />
+            </linearGradient>
+        </defs>
+
         </svg>
        </div>
       </div>
