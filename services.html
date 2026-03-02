@@ -333,7 +333,7 @@
         if (aimstAccount) {
           msalInstance.setActiveAccount(aimstAccount);
           showLoading("You are signed in. Redirecting...");
-          window.location.assign(SUCCESS_REDIRECT_URL);
+          window.location.assign(SUCCESS_REDIRECT_URL, "_blank");
           return;
         }
 
