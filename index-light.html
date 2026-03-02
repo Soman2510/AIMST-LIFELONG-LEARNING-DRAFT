@@ -107,7 +107,7 @@
         radial-gradient(ellipse at 20% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
         radial-gradient(ellipse at 60% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-        linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        linear-gradient(180deg, #0f172a 0%, #323b48 100%);
     }
     
     .grid-pattern {
@@ -193,7 +193,7 @@
 
   /* ===== Light Marble + AIMST Accent Theme Overrides ===== */
   .text-cyan-400, .text-cyan-300 { color: var(--aimst-accent) !important; }
-  .bg-cyan-500\/10, .bg-cyan-500\/20 { background-color: rgba(39,171,171,0.12) !important; }
+  .bg-cyan-500\/10, .bg-cyan-500\/20 { background-color: rgba(49, 213, 213, 0.12) !important; }
   .border-cyan-500\/30 { border-color: rgba(39,171,171,0.30) !important; }
 
   :root {
@@ -218,7 +218,7 @@
     inset: 0;
     background:
       radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.15) 100%),
-      linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+      linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255, 255, 255, 0.784));
     pointer-events: none;
     z-index: 0;
   }
@@ -243,7 +243,7 @@
 
   /* Light cards/sections */
   .gradient-border {
-    background: var(--paper);
+    /* background: var(--paper); */
     border-color: rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(10px);
   }
@@ -285,11 +285,16 @@
     background-clip: text;
   }
 
+  .gradient-text2 {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  
+  
   /* Nav becomes light */
-  nav {
-    background: rgba(255,255,255,0.82) !important;
-    border-color: rgba(15,23,42,0.10) !important;
-  }
+  
 
   /* Inputs on light */
   input, select, textarea {
@@ -314,25 +319,169 @@
     background: rgba(255,255,255,0.82) !important;
   }
 
-  /* Footer on light */
-  footer {
-    background: rgba(255,255,255,0.88) !important;
-    border-color: rgba(15,23,42,0.10) !important;
+
+  
+  /* ===== Beautify: Marble + Glassmorphism (AIMST Accent) ===== */
+  :root{
+    --aimst-accent:#27abab;
+    --aimst-accent-2:#1f8f8f;
+    --gold-accent:#d6b56b;
+    --ink:#0f172a;
+    --muted: rgba(15,23,42,.70);
+    --muted2: rgba(15,23,42,.55);
+    --line: rgba(15,23,42,.10);
+    --glass: rgba(255,255,255,.78);
+    --glass-strong: rgba(255,255,255,.90);
   }
 
-  </style>
+  body{
+    background:
+      url('assets/essentials/marblebg.jpeg') center/cover no-repeat fixed,
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.25) 100%);
+    color: var(--ink);
+  }
+
+  /* subtle veil for readability (kept), but slightly softer */
+  body::before{
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(255,255,255,.72) 0%, rgba(255,255,255,.30) 55%, rgba(255,255,255,.12) 100%),
+      linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.78));
+  }
+
+  /* Global typography */
+  h1,h2,h3,h4{ letter-spacing: -0.02em; }
+  .text-gray-300,.text-gray-400,.text-gray-500{ color: var(--muted) !important; }
+  .text-gray-200\/90{ color: rgba(15,23,42,.72) !important; }
+  .text-white{ color: var(--ink) !important; }
+
+  /* Links */
+  a{ text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover{ color: var(--aimst-accent) !important; }
+
+  /* Nav glass + shadow */
+  nav{
+
+    background: rgb(255, 255, 255) !important;
+    border-color: var(--line) !important;
+    box-shadow: 0 10px 30px rgba(15,23,42,.08);
+  }
+  #mobile-menu{
+    background: rgba(255,255,255,.86) !important;
+    border-color: var(--line) !important;
+  }
+
+  /* Section surfaces on marble */
+  section#about,
+  section#programs,
+  section#why-us,
+  section#how-it-works,
+  section#testimonials,
+  section#contact{
+    position: relative;
+  }
+  section#programs > .absolute,
+  section#how-it-works > .absolute,
+  section#contact > .absolute,
+  section#testimonials > .absolute,
+  section#why-us > .absolute{
+    opacity: .16 !important;
+  }
+
+  /* Wrap inner content with glass feel via existing gradient-border cards */
+  .gradient-border{
+    background: var(--glass);
+    border: 1px solid rgba(15,23,42,.08);
+    box-shadow: 0 18px 45px rgba(15,23,42,.08);
+    backdrop-filter: blur(12px);
+  }
+  .gradient-border::before{
+    background: linear-gradient(135deg, rgba(39,171,171,.65), rgba(214,181,107,.55));
+    opacity: .50;
+  }
+
+  /* Hero: keep airy; reduce heavy blobs */
+  .pulse-glow{ opacity:.55; filter:saturate(.9); }
+  .grid-pattern{ background-size: 70px 70px; }
+
+  /* Buttons */
+  .glow-btn{
+    background: linear-gradient(135deg, var(--aimst-accent), var(--aimst-accent-2)) !important;
+    box-shadow: 0 14px 34px rgba(39,171,171,.22);
+  }
+  .glow-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 18px 44px rgba(39,171,171,.30);
+  }
+  .glow-btn-outline{
+    color: var(--ink) !important;
+    background:
+      linear-gradient(var(--glass-strong), var(--glass-strong)) padding-box,
+      linear-gradient(135deg, var(--aimst-accent), var(--gold-accent)) border-box !important;
+  }
+
+  /* Badges */
+  .course-badge{
+    border: 1px solid rgba(15,23,42,.08);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Program cards: swap dark overlay to light veil */
+  .program-card-bg::after{
+    background: linear-gradient(
+      135deg,
+      rgba(255,255,255,.88),
+      rgba(255,255,255,.55)
+    ) !important;
+  }
+  .card-hover:hover{
+    box-shadow: 0 28px 70px rgba(15,23,42,.12);
+  }
+
+  /* Feature icons + step number */
+  .feature-icon{
+    background: rgba(39,171,171,.10);
+    border: 1px solid rgba(39,171,171,.20);
+  }
+  .step-number{
+    background: linear-gradient(135deg, var(--aimst-accent), var(--gold-accent));
+    box-shadow: 0 14px 34px rgba(214,181,107,.18);
+  }
+
+  /* Testimonials */
+  .testimonial-card{
+    background: rgba(255,255,255,.82) !important;
+    border-color: rgba(15,23,42,.10) !important;
+    box-shadow: 0 18px 45px rgba(15,23,42,.08);
+  }
+
+  /* Inputs */
+  input,select,textarea{
+    background: rgba(255,255,255,.78) !important;
+    border-color: rgba(15,23,42,.12) !important;
+  }
+  input:focus,select:focus,textarea:focus{
+    border-color: var(--aimst-accent) !important;
+    box-shadow: 0 0 0 4px rgba(39,171,171,.16) !important;
+  }
+
+  /* Modal */
+  #course-modal > div{
+    box-shadow: 0 40px 120px rgba(15,23,42,.20);
+  }
+
+</style>
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full w-full bg-transparent text-slate-900 overflow-auto scroll-smooth">
  <div class=" ">
   <!-- Navigation -->
-  <nav class=" fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-lg border-b border-slate-800">
+  <nav class=" top-0 left-0 w-full z-50 bg-white shadow-md border-b border-gray-200">
     <div class="max-w-1xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="flex items-center justify-between h-16 md:h-20">
       <div class="flex items-center gap-3">
        <a href="index.html#home" class="block transition-transform hover:scale-105">
-        <img src="assets/essentials/aimst_logo_alllogo2.png" alt="Our Logo" class="h-10 md:h-12 w-auto object-contain">
+        <img src="assets/essentials/aimst_all_logo.png" alt="Our Logo" class="h-10 md:h-12 w-auto object-contain">
        </a>
        <div><span class="font-bold text-lg md:text-xl text-white">AIMST</span> <span class="hidden sm:inline text-sm md:text-base text-cyan-400 ml-1">Lifelong Learning</span>
        </div>
@@ -357,7 +506,7 @@
      </div>
     </div>
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden lg:hidden bg-slate-900/95 backdrop-blur-lg border-t border-slate-800">
+      <div id="mobile-menu" class="hidden lg:hidden bg-white/90 backdrop-blur-lg border-t border-slate-200">
         <div class="px-4 py-4 space-y-3">
             
             <a href="index.html#home" class="block py-2 text-gray-300 hover:text-cyan-400 transition-colors">Home</a>
@@ -459,7 +608,7 @@
       </svg></a>
     </div>
    </section><!-- About Section -->
-   <section id="about" class="py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative">
+   <section id="about" class="py-24 bg-gradient-to-b from-slate-300 to-slate-100 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="grid lg:grid-cols-2 gap-16 items-center">
       <div><span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">About Us</span>
@@ -490,34 +639,34 @@
        </div>
       </div>
       <div class="relative">
-       <div class="gradient-border rounded-2xl p-8 bg-slate-800/50">
+       <div class="gradient-border rounded-2xl p-8 bg-slate-300/50">
         <div class="grid grid-cols-2 gap-6">
-         <div class="text-center p-6 bg-slate-900/50 rounded-xl">
-          <div class="text-4xl font-bold gradient-text mb-2">
+         <div class="text-center p-6 bg-slate-400/25 rounded-xl">
+          <div class="text-4xl font-bold gradient-text2 mb-2">
            20+
           </div>
-          <div class="text-gray-400 text-sm">
+          <div class="text-white-700 text-sm">
            Years of Excellence
           </div>
          </div>
-         <div class="text-center p-6 bg-slate-900/50 rounded-xl">
-          <div class="text-4xl font-bold gradient-text mb-2">
+         <div class="text-center p-6 bg-slate-400/25 rounded-xl">
+          <div class="text-4xl font-bold gradient-text2 mb-2">
            50+
           </div>
           <div class="text-gray-400 text-sm">
            Expert Faculty
           </div>
          </div>
-         <div class="text-center p-6 bg-slate-900/50 rounded-xl">
-          <div class="text-4xl font-bold gradient-text mb-2">
+         <div class="text-center p-6 bg-slate-400/25 rounded-xl">
+          <div class="text-4xl font-bold gradient-text2 mb-2">
            100%
           </div>
           <div class="text-gray-400 text-sm">
            Online Learning
           </div>
          </div>
-         <div class="text-center p-6 bg-slate-900/50 rounded-xl">
-          <div class="text-4xl font-bold gradient-text mb-2">
+         <div class="text-center p-6 bg-slate-400/25 rounded-xl">
+          <div class="text-4xl font-bold gradient-text2 mb-2">
            MQA
           </div>
           <div class="text-gray-400 text-sm">
@@ -532,22 +681,22 @@
      </div>
     </div>
    </section><!-- Interactive Courses Section -->
-   <section id="programs" class="py-24 bg-gradient-to-b from-slate-900 to-slate-800 relative">
+   <section id="programs" class="py-24 bg-transparent relative">
     <div class="absolute inset-0 grid-pattern opacity-50"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
      <div class="text-center mb-12"><span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">Explore Courses</span>
       <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">Find Your <span class="gradient-text">Program</span></h2>
       <p class="text-gray-400 text-lg max-w-2xl mx-auto">Search, filter, and explore 25+ programs. Click any course to view full details.</p>
      </div>
-     <div class="mb-8 flex flex-col sm:flex-row gap-4"><input type="text" id="course-search" placeholder="Search courses..." class="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-gray-500"> <select id="category-filter" class="px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white"> <option value="">All Categories</option> <option value="ODL">Open Distance Learning</option> <option value="Micro">Microcredentials</option> <option value="Cert">Certification Programmes</option> <option value="Short">Short Courses</option> </select>
+     <div class="mb-8 flex flex-col sm:flex-row gap-4"><input type="text" id="course-search" placeholder="Search courses..." class="flex-1 px-4 py-3 bg-white/70 border border-slate-200 rounded-xl text-white placeholder-gray-500"> <select id="category-filter" class="px-4 py-3 bg-white/70 border border-slate-200 rounded-xl text-white"> <option value="">All Categories</option> <option value="ODL">Open Distance Learning</option> <option value="Micro">Microcredentials</option> <option value="Cert">Certification Programmes</option> <option value="Short">Short Courses</option> </select>
      </div>
      <div id="courses-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Courses populated by JavaScript -->
      </div>
     </div>
    </section><!-- Course Detail Modal -->
-   <div id="course-modal" class="hidden fixed inset-0 bg-black/50 modal-backdrop z-50 flex items-center justify-center p-4" style="height: 100%;">
-    <div class="bg-slate-900 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto p-10 relative">
-     <div class="relative top-0 bg-slate-800 border-b border-slate-700 p-6 flex items-start justify-between">
+   <div id="course-modal" class="hidden fixed inset-0 bg-black/25 modal-backdrop z-50 flex items-center justify-center p-4" style="height: 100%;">
+    <div class="bg-white/90 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto p-10 relative">
+     <div class="relative top-0 bg-white/70 border-b border-slate-200 p-6 flex items-start justify-between">
       <div>
        <div id="modal-badge" class="course-badge bg-cyan-500/20 text-cyan-300 mb-2"></div>
        <h2 id="modal-title" class="text-2xl font-bold text-white"></h2>
@@ -572,7 +721,7 @@
         <div>
           <h3 class="text-2xl font-bold text-white mb-6">Trainer's Profile</h3>
 
-          <div class="bg-slate-800/60 rounded-xl p-6 flex flex-col md:flex-row gap-8 items-start">
+          <div class="bg-white/70 rounded-xl p-6 flex flex-col md:flex-row gap-8 items-start">
             
             <!-- Profile Image -->
             <img id="trainer-image"
@@ -600,7 +749,7 @@
      </div>
     </div>
    </div><!-- Why Choose Us Section -->
-   <section id="why-us" class="py-24 bg-gradient-to-b from-slate-800 to-slate-900 relative overflow-hidden"></section>
+   <section id="why-us" class="bg-white/80 backdrop-blur-md py-24 border-y border-gray-200">
     <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
      <div class="text-center mb-16"><span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">Why Choose Us</span>
@@ -659,7 +808,7 @@
      </div>
     </div>
    </section><!-- How It Works Section -->
-   <section id="how-it-works" class="py-24 bg-slate-900 relative">
+   <section id="how-it-works" class="py-24 bg-transparent relative">
     <div class="absolute inset-0 grid-pattern opacity-30"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
      <div class="text-center mb-16"><span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">Get Started</span>
@@ -699,7 +848,7 @@
      </div>
     </div>
    </section><!-- Testimonials Section -->
-   <section id="why-us" class="py-24 bg-gradient-to-b from-slate-800 to-slate-900 relative overflow-hidden"></section>
+   <section id="testimonials" class="bg-white/80 backdrop-blur-md py-24 border-y border-gray-200">
     <div class="absolute top-1/2 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -translate-y-1/2"></div>
     <div class="absolute top-1/2 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -708,7 +857,7 @@
       <p class="text-gray-400 text-lg max-w-2xl mx-auto">Hear from our graduates about their transformative learning experience.</p>
      </div>
      <div class="grid md:grid-cols-3 gap-8"><!-- Testimonial 1 -->
-      <div class="testimonial-card rounded-2xl p-8 border border-slate-700/50 card-hover">
+      <div class="testimonial-card rounded-2xl p-8 border border-slate-200/70 card-hover">
        <div class="flex items-center gap-1 mb-4">
         <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -741,7 +890,7 @@
         </div>
        </div>
       </div><!-- Testimonial 2 -->
-      <div class="testimonial-card rounded-2xl p-8 border border-slate-700/50 card-hover">
+      <div class="testimonial-card rounded-2xl p-8 border border-slate-200/70 card-hover">
        <div class="flex items-center gap-1 mb-4">
         <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -774,7 +923,7 @@
         </div>
        </div>
       </div><!-- Testimonial 3 -->
-      <div class="testimonial-card rounded-2xl p-8 border border-slate-700/50 card-hover">
+      <div class="testimonial-card rounded-2xl p-8 border border-slate-200/70 card-hover">
        <div class="flex items-center gap-1 mb-4">
         <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewbox="0 0 20 20">
          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -811,7 +960,7 @@
     </div>
    </section>
    <!-- Contact Section -->
-   <section id="contact" class="py-24 bg-slate-900 relative">
+   <section id="contact" class="py-24 bg-transparent relative">
     <div class="absolute inset-0 grid-pattern opacity-30"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
      <div class="grid lg:grid-cols-2 gap-16 items-center">
@@ -931,15 +1080,15 @@
 
         </div>
       </div>
-      <div class="gradient-border rounded-2xl p-8 bg-slate-800/50">
+      <div class="gradient-border rounded-2xl p-8 bg-white/70">
        <form id="contact-form" class="space-y-6">
-        <div><label for="name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-gray-500 transition-all" placeholder="Enter your full name">
+        <div><label for="name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-white/70 border border-slate-200 rounded-xl text-white placeholder-gray-500 transition-all" placeholder="Enter your full name">
         </div>
-        <div><label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-gray-500 transition-all" placeholder="Enter your email">
+        <div><label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-white/70 border border-slate-200 rounded-xl text-white placeholder-gray-500 transition-all" placeholder="Enter your email">
         </div>
-        <div><label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label> <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-gray-500 transition-all" placeholder="Enter your phone number">
+        <div><label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label> <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-white/70 border border-slate-200 rounded-xl text-white placeholder-gray-500 transition-all" placeholder="Enter your phone number">
         </div>
-        <div><label for="program" class="block text-sm font-medium text-gray-300 mb-2">Program of Interest</label> <select id="program" name="program" required class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white transition-all"> 
+        <div><label for="program" class="block text-sm font-medium text-gray-300 mb-2">Program of Interest</label> <select id="program" name="program" required class="w-full px-4 py-3 bg-white/70 border border-slate-200 rounded-xl text-white transition-all"> 
             <option value="" disabled selected>Select a program</option>
 
             <option value="mba">Master of Business Administration (MBA)</option>
@@ -985,7 +1134,7 @@
     </div>
    </section>
    <!-- Footer -->
-   <footer class="bg-slate-950 border-t border-slate-800">
+   <footer class="bg-white/80 backdrop-blur-md py-24 border-y border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-12"><!-- Brand -->
       <div class="lg:col-span-1">
@@ -997,17 +1146,17 @@
         <div><span class="font-bold text-xl text-white">AIMST</span> <span class="text-cyan-400 block text-sm">Lifelong Learning</span>
         </div>
        </div>
-       <p class="text-gray-400 text-sm mb-6">Empowering futures through accessible, quality education with our innovative Open &amp; Distance Learning programs.</p>
-       <div class="flex items-center gap-4"><a href="#" class="w-10 h-10 rounded-lg bg-slate-800 hover:bg-cyan-500/20 flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
+       <p class="text-gray-400 hover:text-[#27abab] transition text-sm mb-6">Empowering futures through accessible, quality education with our innovative Open &amp; Distance Learning programs.</p>
+       <div class="flex items-center gap-4"><a href="#" class="w-10 h-10 rounded-lg bg-white/70 hover:bg-[rgba(39,171,171,0.12)] flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
          <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
           <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-         </svg></a> <a href="#" class="w-10 h-10 rounded-lg bg-slate-800 hover:bg-cyan-500/20 flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
+         </svg></a> <a href="#" class="w-10 h-10 rounded-lg bg-white/70 hover:bg-[rgba(39,171,171,0.12)] flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
          <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
           <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-         </svg></a> <a href="#" class="w-10 h-10 rounded-lg bg-slate-800 hover:bg-cyan-500/20 flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
+         </svg></a> <a href="#" class="w-10 h-10 rounded-lg bg-white/70 hover:bg-[rgba(39,171,171,0.12)] flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
          <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
           <path d="M22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0zM7.27 20.1H3.65V9.24h3.62V20.1zM5.47 7.76h-.03c-1.22 0-2-.83-2-1.87 0-1.06.8-1.87 2.05-1.87 1.24 0 2 .8 2.02 1.87 0 1.04-.78 1.87-2.05 1.87zM20.34 20.1h-3.63v-5.8c0-1.45-.52-2.45-1.83-2.45-1 0-1.6.67-1.87 1.32-.1.23-.11.55-.11.88v6.05H9.28s.05-9.82 0-10.84h3.63v1.54a3.6 3.6 0 0 1 3.26-1.8c2.39 0 4.18 1.56 4.18 4.89v6.21z" />
-         </svg></a> <a href="#" class="w-10 h-10 rounded-lg bg-slate-800 hover:bg-cyan-500/20 flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
+         </svg></a> <a href="#" class="w-10 h-10 rounded-lg bg-white/70 hover:bg-[rgba(39,171,171,0.12)] flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-all">
          <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
           <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
          </svg></a>
@@ -1047,7 +1196,7 @@
        </ul>
       </div>
      </div>
-     <div class="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+     <div class="border-t border-slate-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
       <p class="text-gray-500 text-sm">© 2024 AIMST Lifelong Learning. All rights reserved.</p>
       <div class="flex items-center gap-6"><a href="#" class="text-gray-500 hover:text-cyan-400 transition-colors text-sm">Privacy Policy</a> <a href="#" class="text-gray-500 hover:text-cyan-400 transition-colors text-sm">Terms of Service</a> <a href="#" class="text-gray-500 hover:text-cyan-400 transition-colors text-sm">Cookie Policy</a>
       </div>
@@ -1219,7 +1368,7 @@
       // outline (safe)
       const outlineContainer = document.getElementById("modal-outline");
       outlineContainer.innerHTML = (course.outline || []).map(item =>
-        `<div class="bg-slate-800/50 p-4 rounded-lg text-sm">${item}</div>`
+        `<div class="bg-white/70 p-4 rounded-lg text-sm">${item}</div>`
       ).join("");
 
       // trainer (safe)
@@ -1235,7 +1384,7 @@
       // careers list (safe)
       const careerList = document.getElementById("career-list");
       careerList.innerHTML = (course.careers || []).map(career =>
-        `<div class="bg-slate-800/50 p-4 rounded-lg text-sm">${career}</div>`
+        `<div class="bg-white/70 p-4 rounded-lg text-sm">${career}</div>`
       ).join("");
 
       document.getElementById("course-modal").classList.remove("hidden");
