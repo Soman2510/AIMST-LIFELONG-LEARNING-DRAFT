@@ -303,7 +303,7 @@
           redirectUri: REDIRECT_URI
         },
         cache: {
-          cacheLocation: "sessionStorage",
+          cacheLocation: "localStorage",
           storeAuthStateInCookie: false
         }
       });
@@ -322,7 +322,7 @@
           }
 
           // Success → go to your destination
-          window.location.assign(SUCCESS_REDIRECT_URL, "_blank");
+          window.location.assign(SUCCESS_REDIRECT_URL, "_blank", "noopener,noreferrer");
           return;
         }
 
@@ -333,7 +333,7 @@
         if (aimstAccount) {
           msalInstance.setActiveAccount(aimstAccount);
           showLoading("You are signed in. Redirecting...");
-          window.location.assign(SUCCESS_REDIRECT_URL, "_blank");
+          window.location.assign(SUCCESS_REDIRECT_URL, "_blank", "noopener,noreferrer");
           return;
         }
 
@@ -356,7 +356,7 @@
 
           await msalInstance.loginRedirect({
             scopes: ["openid", "profile", "email"],
-            prompt: "select_account"
+            // prompt: "select_account"
           });
         } catch (err) {
           console.error("MSAL loginRedirect failed:", err);
