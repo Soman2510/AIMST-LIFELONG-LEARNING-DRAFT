@@ -164,32 +164,69 @@
       font-weight: 600;
     }
 
-      .program-card-bg {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-    overflow: hidden;
-  }
+     /* === Program card: image bg + light theme overlay === */
+.program-card{
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(15,23,42,.10);
+  box-shadow: 0 20px 60px rgba(15,23,42,.10);
+}
 
-  /* dark overlay for readability */
-  .program-card-bg::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(15, 23, 42, 0.85),
-      rgba(15, 23, 42, 0.55)
-    );
-    pointer-events: none;
-  }
+/* Image layer (fits inside!) */
+.program-card::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  background-image: var(--bg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;            /* ✅ NO CROPPING */
+  background-color: rgba(255,255,255,.55);  /* fills empty space */
+  transform: scale(1.02);
+  z-index: 0;
+}
 
-  /* keep card content above overlay */
-  .program-card-content {
-    position: relative;
-    z-index: 1;
-  }
+/* Glass overlay for readability (light theme) */
+.program-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.356) 0%,
+    rgba(255,255,255,.68) 55%,
+    rgba(255,255,255,.45) 100%
+  );
+  z-index: 1;
+}
+
+/* Content sits above overlay */
+.program-card-content{
+  position: relative;
+  z-index: 2;
+}
+
+/* Text colors for light theme */
+.program-card-title{ color: #0f172a; }
+.program-card-desc{ color: rgba(15,23,42,.72); }
+
+/* View details accent */
+.program-card-link{
+  color: #27abab;
+  transition: transform .25s ease, opacity .25s ease;
+}
+.program-card:hover .program-card-link{
+  transform: translateX(2px);
+  opacity: .95;
+}
+
+/* Optional: add a subtle gold line glow on hover */
+.program-card:hover{
+  box-shadow: 0 28px 80px rgba(15,23,42,.14);
+  border-color: rgba(214,181,107,.35);
+}
+
+
 
   /* ===== Light Marble + AIMST Accent Theme Overrides ===== */
   .text-cyan-400, .text-cyan-300 { color: var(--aimst-accent) !important; }
@@ -1204,7 +1241,7 @@
     </div>
    </footer>
   </div>
-  <script>
+<script>
     const defaultConfig = {
       hero_headline: 'Empowering Futures Through Open & Distance Learning',
       hero_subheadline: 'Flexible, Accredited, Career-Focused Online Programs designed for the modern learner seeking excellence.',
@@ -1304,60 +1341,64 @@
       { id: 25, name: 'ISO 14001:2015 Awareness - Environmental Aspects', category: 'Short', badge: 'Short Course',  image: 'assets/programs/envasp.jpg', description: 'Focused awareness training on ISO 14001:2015 environmental aspects and social impacts. Quick course for employees and new team members.', outline: ['• Environmental Aspects Definition', '• Identifying Impacts', '• Social Responsibility Elements', '• Compliance Requirements', '• Workplace Application', '• Best Practices', '• Duration: 3 weeks', '• Assessment: Quiz, Workshop Participation'], careers: ['Compliance Officer', 'EMS Coordinator', 'Environmental Technician', 'Quality Officer', 'Safety Officer'] }
     ];
 
-    // Render courses on page load
-    function renderCourses(filter = '', search = '') {
-      const grid = document.getElementById('courses-grid');
-      let filtered = coursesDatabase;
+   function renderCourses(filter = '', search = '') {
+        const grid = document.getElementById('courses-grid');
+        if (!grid) return;
 
-      if (filter) {
-        filtered = filtered.filter(c => c.category === filter);
-      }
-      if (search) {
-        filtered = filtered.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
-      }
+        let filtered = coursesDatabase;
 
-    grid.innerHTML = filtered.map(course => {
-      const bg = course.image ? `background-image:url('${course.image}')` : '';
-      return `
-        <div
-          class="card-hover gradient-border rounded-2xl p-6 backdrop-blur cursor-pointer program-card-bg"
-          style="${bg}"
-          data-course-id="${course.id}"
-        >
-          <div class="program-card-content">
-            <div class="course-badge ${getCategoryColor(course.category)} mb-3">${course.badge}</div>
-            <h3 class="text-lg font-bold text-white mb-2">${course.name}</h3>
-            <p class="text-gray-200/90 text-sm mb-4 line-clamp-2">${course.description}</p>
-            <div class="flex items-center justify-between">
-              <span class="text-cyan-300 text-sm font-semibold">View Details</span>
-              <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
+        if (filter) filtered = filtered.filter(c => c.category === filter);
+        if (search) filtered = filtered.filter(c =>
+            (c.name || '').toLowerCase().includes(search.toLowerCase())
+        );
+
+        grid.innerHTML = filtered.map(course => `
+            <div
+            class="program-card card-hover rounded-2xl p-6 backdrop-blur cursor-pointer"
+            style="--bg:url('${course.image || 'assets/programs/default.jpg'}');"
+            data-course-id="${course.id}"
+            >
+            <div class="program-card-content">
+                <div class="course-badge ${getCategoryColor(course.category)} mb-3">${course.badge || ''}</div>
+
+                <h3 class="program-card-title text-lg font-bold mb-2">
+                ${course.name || ''}
+                </h3>
+
+                <p class="program-card-desc text-sm mb-4 line-clamp-2">
+                ${course.description || ''}
+                </p>
+
+                <div class="flex items-center justify-between">
+                <span class="program-card-link text-sm font-semibold">View Details</span>
+                <svg class="w-4 h-4 program-card-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                </div>
             </div>
-          </div>
-        </div>
-      `;
-    }).join('');
+            </div>
+        `).join('');
 
-      // Add click handlers
-      grid.querySelectorAll('[data-course-id]').forEach(card => {
-        card.addEventListener('click', () => {
-          const courseId = parseInt(card.dataset.courseId);
-          const course = coursesDatabase.find(c => c.id === courseId);
-          openCourseModal(course);
+        grid.querySelectorAll('[data-course-id]').forEach(card => {
+            card.addEventListener('click', () => {
+            const courseId = parseInt(card.dataset.courseId, 10);
+            const course = coursesDatabase.find(c => c.id === courseId);
+            if (course) openCourseModal(course);
+            });
         });
-      });
+    } 
+   
+    function getCategoryColor(category) {
+        const colors = {
+            ODL: 'bg-[rgba(39,171,171,0.14)] text-[#27abab] border border-[rgba(39,171,171,0.25)]',
+            Micro: 'bg-[rgba(214,181,107,0.16)] text-[rgba(125,92,20,0.95)] border border-[rgba(214,181,107,0.30)]',
+            Cert: 'bg-[rgba(39,171,171,0.10)] text-[#1f8f8f] border border-[rgba(39,171,171,0.18)]',
+            Short: 'bg-[rgba(214,181,107,0.14)] text-[rgba(125,92,20,0.95)] border border-[rgba(214,181,107,0.26)]'
+        };
+        return colors[category] || 'bg-slate-100 text-slate-700 border border-slate-200';
     }
 
-    function getCategoryColor(category) {
-      const colors = {
-        ODL: 'bg-cyan-500/20 text-cyan-300',
-        Micro: 'bg-blue-500/20 text-blue-300',
-        Cert: 'bg-purple-500/20 text-purple-300',
-        Short: 'bg-amber-500/20 text-amber-300'
-      };
-      return colors[category] || 'bg-gray-500/20 text-gray-300';
-    }
+    
 
     function openCourseModal(course) {
       document.getElementById('modal-badge').textContent = course.badge;
